@@ -2,7 +2,8 @@
 import { useMemo, useState } from 'preact/hooks';
 import { html } from '../html.js';
 import { useData } from '../data.js';
-import { LIST_MODES, groupTickets, filterTickets } from '../model/grouping.js';
+import { LIST_MODES, groupTickets, filterTickets, viewableTickets } from '../model/grouping.js';
+import { setViewerOrder } from '../viewer-order.js';
 import { performerNamesOf } from '../model/performers.js';
 import { ticketMetaLine, formatDate } from '../format.js';
 import { loadPref, savePref } from '../prefs.js';
@@ -33,6 +34,9 @@ export function ListView() {
     () => groupTickets(filtered, mode, performersById).filter((s) => s.tickets.length > 0),
     [filtered, mode, performersById],
   );
+
+  // めくる画面は、ギャラリーで今見えている並びのまま開く
+  setViewerOrder(viewableTickets(sections).map((t) => t.id));
 
   const confirmDelete = async (ticket) => {
     if (!confirm(`「${ticket.title}」を削除しますか？\nこの操作は取り消せません。`)) return false;
@@ -145,8 +149,8 @@ function GalleryTile({ ticket, onDelete }) {
 
   const open = () => {
     if (press.consumeClick()) return;
-    // めくって見る画面は Phase 5。それまでは詳細を開く
-    navigate('ticket', ticket.id);
+    // 画像のある半券は全画面でめくって見る。画像がなければ詳細
+    navigate(ticket.hasImage ? 'view' : 'ticket', ticket.id);
   };
 
   return html`
