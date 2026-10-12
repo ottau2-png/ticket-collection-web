@@ -1,6 +1,6 @@
 // アプリのファイルをすべてキャッシュし、オフラインでも開けるようにする。
 // ファイルを変えて公開するときは VERSION を上げる（上げないと古い版が使われ続ける）。
-const VERSION = '0.1.0';
+const VERSION = '0.2.0';
 const CACHE = `ticket-web-${VERSION}`;
 
 // tests/sw-precache.test.js が、アプリのファイルの漏れがないか確かめる
@@ -16,6 +16,8 @@ const PRECACHE = [
   'vendor/hooks.module.js',
   'vendor/htm.module.js',
   'src/app.js',
+  'src/data.js',
+  'src/format.js',
   'src/html.js',
   'src/image.js',
   'src/model/category.js',
@@ -23,9 +25,16 @@ const PRECACHE = [
   'src/model/performers.js',
   'src/model/text.js',
   'src/model/ticket.js',
-  'src/sw-register.js',
+  'src/prefs.js',
+  'src/router.js',
   'src/store/db.js',
   'src/store/idb.js',
+  'src/styles.css',
+  'src/sw-register.js',
+  'src/views/gestures.js',
+  'src/views/list-view.js',
+  'src/views/settings-view.js',
+  'src/views/thumbnail.js',
 ];
 
 self.addEventListener('install', (event) => {
@@ -48,6 +57,11 @@ self.addEventListener('message', (event) => {
 self.addEventListener('fetch', (event) => {
   const req = event.request;
   if (req.method !== 'GET' || new URL(req.url).origin !== self.location.origin) return;
+  // 手元での開発中は、書き換えたファイルがすぐ見えるようにネットワークを先に使う
+  if (self.location.hostname === 'localhost') {
+    event.respondWith(fetch(req).catch(() => caches.match(req, { ignoreSearch: true })));
+    return;
+  }
   event.respondWith((async () => {
     const cache = await caches.open(CACHE);
     const hit = await cache.match(req, { ignoreSearch: true });

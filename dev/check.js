@@ -6,6 +6,7 @@ import { serviceWorkerVersion } from '../src/sw-register.js';
 import { TicketStore } from '../src/store/db.js';
 import { emptyDraft, ticketFromDraft } from '../src/model/ticket.js';
 import { resolvePerformers } from '../src/model/performers.js';
+import { addSamples, removeSamples } from './sample.js';
 
 const $ = (id) => document.getElementById(id);
 // 結果は再起動（3 の確認）をまたいで残す
@@ -279,6 +280,25 @@ $('store-run').onclick = async () => {
     store?.db.close();
     indexedDB.deleteDatabase(name);
     $('store-out').textContent = log.join('\n');
+  }
+};
+
+// ---- 9. サンプル ----
+$('samples-add').onclick = async () => {
+  try {
+    $('samples-status').textContent = '作成中…';
+    const n = await addSamples();
+    setResult('samples', true, `${n}枚を入れた（アプリに戻って一覧を確認）`);
+  } catch (e) {
+    setResult('samples', false, errorText(e));
+  }
+};
+$('samples-remove').onclick = async () => {
+  try {
+    const n = await removeSamples();
+    setResult('samples', true, `${n}枚を消した`);
+  } catch (e) {
+    setResult('samples', false, errorText(e));
   }
 };
 
