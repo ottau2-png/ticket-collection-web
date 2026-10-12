@@ -6,10 +6,12 @@ import { openDatabase, requestResult, transactionDone } from './idb.js';
 import { orphanPerformerIds, mergePerformer } from '../model/performers.js';
 
 const DB_NAME = 'ticket-collection';
-const DB_VERSION = 1;
+const DB_VERSION = 2;
 
-// ストア：tickets・performers（keyPath id）、originals・thumbnails（半券の id をキーに Blob）、meta（設定など）
-const ALL_STORES = ['tickets', 'performers', 'originals', 'thumbnails', 'meta'];
+// ストア：tickets・performers（keyPath id）、originals（切り抜いた画像）・thumbnails・sources（切り抜く前の写真）は
+// 半券の id をキーに Blob、meta（設定など）
+const ALL_STORES = ['tickets', 'performers', 'originals', 'thumbnails', 'sources', 'meta'];
+const IMAGE_STORES = ['originals', 'thumbnails', 'sources'];
 
 export function openTicketDatabase(name = DB_NAME) {
   return openDatabase(name, DB_VERSION, (db, oldVersion) => {
@@ -19,6 +21,9 @@ export function openTicketDatabase(name = DB_NAME) {
       db.createObjectStore('originals');
       db.createObjectStore('thumbnails');
       db.createObjectStore('meta');
+    }
+    if (oldVersion < 2) {
+      db.createObjectStore('sources');
     }
   });
 }
@@ -50,6 +55,11 @@ export class TicketStore {
     return this.#get('originals', ticketId);
   }
 
+  /** 切り抜く前の写真。切り抜きを入れる前に登録した半券にはない */
+  getSource(ticketId) {
+    return this.#get('sources', ticketId);
+  }
+
   async getMeta(key) {
     return this.#get('meta', key);
   }
@@ -64,18 +74,19 @@ export class TicketStore {
    * 半券を保存する。
    * @param ticket 保存形式の半券
    * @param newPerformers 出演者欄から新しく作った出演者
-   * @param image { original, thumbnail } で差し替え、null で削除、undefined なら画像を触らない
+   * @param image { original, thumbnail, source? } で差し替え、null で削除、undefined なら画像を触らない
    */
   async saveTicket(ticket, { newPerformers = [], image } = {}) {
     await this.#write(async (tx) => {
       for (const p of newPerformers) tx.objectStore('performers').put(p);
       tx.objectStore('tickets').put(ticket);
       if (image === null) {
-        tx.objectStore('originals').delete(ticket.id);
-        tx.objectStore('thumbnails').delete(ticket.id);
+        for (const store of IMAGE_STORES) tx.objectStore(store).delete(ticket.id);
       } else if (image) {
         tx.objectStore('originals').put(image.original, ticket.id);
         tx.objectStore('thumbnails').put(image.thumbnail, ticket.id);
+        if (image.source) tx.objectStore('sources').put(image.source, ticket.id);
+        else tx.objectStore('sources').delete(ticket.id);
       }
       await removeOrphans(tx);
     });
@@ -84,8 +95,7 @@ export class TicketStore {
   async deleteTicket(ticketId) {
     await this.#write(async (tx) => {
       tx.objectStore('tickets').delete(ticketId);
-      tx.objectStore('originals').delete(ticketId);
-      tx.objectStore('thumbnails').delete(ticketId);
+      for (const store of IMAGE_STORES) tx.objectStore(store).delete(ticketId);
       await removeOrphans(tx);
     });
   }

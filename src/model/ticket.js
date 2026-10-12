@@ -4,8 +4,9 @@
 //   { id, title, subtitle, category, performerIds: [], performanceDate: 'YYYY-MM-DD',
 //     openTime: 'HH:MM' | null, startTime: 'HH:MM' | null, venue,
 //     seat: { floor, block, row, number, gate, note }, price: number | null, issuer,
-//     ocrText, comment, hasImage: boolean, createdAt: ISO, updatedAt: ISO }
-// 画像は別のストア（originals / thumbnails）に半券の id で置く。一覧はサムネイルだけ読む。
+//     ocrText, comment, hasImage: boolean, crop: 四隅 | null, createdAt: ISO, updatedAt: ISO }
+// 画像は別のストア（originals：切り抜いた画像 / thumbnails / sources：切り抜く前の写真）に半券の id で置く。
+// 一覧はサムネイルだけ読む。crop は切り抜く前の写真に対する四隅（0〜1、左上・右上・右下・左下）。
 //
 // フォームは下書きを編集し、保存時だけ ticketFromDraft で保存形式にする（キャンセルで何も変えないため）。
 
@@ -44,8 +45,9 @@ export function emptyDraft(today = localDateString()) {
     issuer: '',
     comment: '',
     ocrText: '',
-    // 画像は { original: Blob, thumbnail: Blob } か null。imageChanged が false なら保存時に画像を触らない
+    // 画像は { original: Blob, thumbnail: Blob, source?: Blob } か null。imageChanged が false なら保存時に画像を触らない
     image: null,
+    crop: null,
     hasImage: false,
     imageChanged: false,
   };
@@ -69,6 +71,7 @@ export function draftFromTicket(ticket, performersById) {
     comment: ticket.comment,
     ocrText: ticket.ocrText,
     hasImage: ticket.hasImage,
+    crop: ticket.crop ?? null,
   };
 }
 
@@ -77,12 +80,17 @@ export function canSave(draft) {
 }
 
 /** 新しい画像を付ける。前の画像の読み取り文字は消す */
-export function withImage(draft, image) {
-  return { ...draft, image, hasImage: true, imageChanged: true, ocrText: '' };
+export function withImage(draft, image, crop = null) {
+  return { ...draft, image, crop, hasImage: true, imageChanged: true, ocrText: '' };
+}
+
+/** 同じ写真を切り抜き直す。読み取り文字は写真が同じなので残す */
+export function withRecrop(draft, image, crop) {
+  return { ...draft, image, crop, imageChanged: true };
 }
 
 export function withoutImage(draft) {
-  return { ...draft, image: null, hasImage: false, imageChanged: true, ocrText: '' };
+  return { ...draft, image: null, crop: null, hasImage: false, imageChanged: true, ocrText: '' };
 }
 
 /**
@@ -107,6 +115,7 @@ export function ticketFromDraft(draft, { id, performerIds, existing = null, now 
     ocrText: draft.ocrText,
     comment: draft.comment,
     hasImage: draft.hasImage,
+    crop: draft.hasImage ? draft.crop : null,
     createdAt: existing?.createdAt ?? iso,
     updatedAt: iso,
   };

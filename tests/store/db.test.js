@@ -102,3 +102,38 @@ test('設定の値を保存できる', async () => {
   await store.setMeta('lastExportAt', '2026-10-12T00:00:00Z');
   assert.equal(await store.getMeta('lastExportAt'), '2026-10-12T00:00:00Z');
 });
+
+test('切り抜く前の写真も保存・削除される。source なしの画像に差し替えると消える', async () => {
+  const store = await openStore();
+  const image = { original: new Blob(['o']), thumbnail: new Blob(['t']), source: new Blob(['s']) };
+  await saveFromForm(store, 't1', { title: '公演', hasImage: true }, { image });
+  assert.equal(await (await store.getSource('t1')).text(), 's');
+  await saveFromForm(store, 't1', { title: '公演', hasImage: true }, { image: { original: new Blob(['o2']), thumbnail: new Blob(['t2']) } });
+  assert.equal(await store.getSource('t1'), undefined);
+  await saveFromForm(store, 't2', { title: '別', hasImage: true }, { image });
+  await store.deleteTicket('t2');
+  assert.equal(await store.getSource('t2'), undefined);
+});
+
+test('版1のデータベースから開き直しても、半券は残り sources が増える', async () => {
+  const name = `upgrade-${Date.now()}`;
+  const v1 = await new Promise((resolve, reject) => {
+    const req = indexedDB.open(name, 1);
+    req.onupgradeneeded = () => {
+      for (const s of ['tickets', 'performers']) req.result.createObjectStore(s, { keyPath: 'id' });
+      for (const s of ['originals', 'thumbnails', 'meta']) req.result.createObjectStore(s);
+    };
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  });
+  await new Promise((resolve) => {
+    const tx = v1.transaction('tickets', 'readwrite');
+    tx.objectStore('tickets').put({ id: 'old', title: '古い半券', performerIds: [] });
+    tx.oncomplete = resolve;
+  });
+  v1.close();
+  const store = await TicketStore.open(name);
+  assert.deepEqual((await store.loadAll()).tickets.map((t) => t.title), ['古い半券']);
+  assert.ok(store.db.objectStoreNames.contains('sources'));
+  assert.equal(await store.getSource('old'), undefined);
+});

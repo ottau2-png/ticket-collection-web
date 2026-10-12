@@ -4,10 +4,12 @@ import { html } from '../html.js';
 import { useData } from '../data.js';
 import { CATEGORIES } from '../model/category.js';
 import {
-  emptyDraft, draftFromTicket, canSave, ticketFromDraft, withImage, withoutImage, SEAT_FIELDS, SEAT_LABELS,
+  emptyDraft, draftFromTicket, canSave, ticketFromDraft, withImage, withRecrop, withoutImage, SEAT_FIELDS, SEAT_LABELS,
 } from '../model/ticket.js';
 import { resolvePerformers } from '../model/performers.js';
-import { makeTicketImages } from '../image.js';
+import { fullQuad } from '../model/crop.js';
+import { prepareSource, cropTicketImage, detectQuad } from '../image.js';
+import { CropView } from './crop-view.js';
 import { goBack } from '../router.js';
 import { TextField, SelectField, DateField, OptionalTimeField, FieldGroup } from './fields.js';
 import { Thumbnail } from './thumbnail.js';
@@ -15,7 +17,7 @@ import { Missing, useObjectUrl } from './common.js';
 
 /** @param ticketId 編集する半券。null なら新規 */
 export function EditView({ ticketId }) {
-  const { tickets, performers, performersById, loaded, mutate } = useData();
+  const { tickets, performers, performersById, loaded, mutate, store } = useData();
   const existing = ticketId ? tickets.find((t) => t.id === ticketId) : null;
 
   // 下書きは開いたときに一度だけ作る（保存で一覧が読み直されても、編集中の値を上書きしない）
@@ -32,6 +34,8 @@ export function EditView({ ticketId }) {
   const [saving, setSaving] = useState(false);
   const [imageBusy, setImageBusy] = useState(false);
   const [error, setError] = useState(null);
+  // 切り抜き画面：{ source, initialQuad, autoQuad, recrop }
+  const [cropping, setCropping] = useState(null);
 
   if (loaded && ticketId && !existing && !draft) {
     return html`<${Missing} />`;
@@ -65,15 +69,54 @@ export function EditView({ ticketId }) {
     }
   };
 
+  // 撮影・選んだ写真は、縮小して四隅を推定してから切り抜き画面へ
   const pickImage = async (file) => {
     if (!file) return;
     setImageBusy(true);
     setError(null);
     try {
-      const { original, thumbnail } = await makeTicketImages(file);
-      setDraft((d) => withImage(d, { original: original.blob, thumbnail: thumbnail.blob }));
+      const { source, quad } = await prepareSource(file);
+      setCropping({ source, initialQuad: null, autoQuad: quad, recrop: false });
     } catch (e) {
       setError(`画像を読み込めませんでした：${e.message ?? e}`);
+    } finally {
+      setImageBusy(false);
+    }
+  };
+
+  // 切り抜き直し：切り抜く前の写真から、前回の四隅で始める。
+  // 切り抜きを入れる前に登録した半券は、今の画像を切り抜く前の写真として扱う
+  const recrop = async () => {
+    setImageBusy(true);
+    setError(null);
+    try {
+      let source = draft.image?.source ?? null;
+      let initialQuad = draft.crop;
+      if (!source && !draft.imageChanged && existing) source = (await store.getSource(existing.id)) ?? null;
+      if (!source) {
+        // 切り抜く前の写真がない：今の画像全体から始める
+        source = draft.image?.original ?? (existing ? await store.getOriginal(existing.id) : null);
+        initialQuad = fullQuad();
+      }
+      if (!source) throw new Error('画像が見つかりません');
+      setCropping({ source, initialQuad, autoQuad: await detectQuad(source), recrop: true });
+    } catch (e) {
+      setError(`画像を読み込めませんでした：${e.message ?? e}`);
+    } finally {
+      setImageBusy(false);
+    }
+  };
+
+  const applyCrop = async (quad) => {
+    setImageBusy(true);
+    try {
+      const { original, thumbnail } = await cropTicketImage(cropping.source, quad);
+      const image = { original, thumbnail, source: cropping.source };
+      setDraft((d) => (cropping.recrop ? withRecrop(d, image, quad) : withImage(d, image, quad)));
+      setCropping(null);
+    } catch (e) {
+      setError(`切り抜けませんでした：${e.message ?? e}`);
+      setCropping(null);
     } finally {
       setImageBusy(false);
     }
@@ -92,7 +135,7 @@ export function EditView({ ticketId }) {
         ${error && html`<p class="error">${error}</p>`}
 
         <${ImageSection} draft=${draft} existing=${existing} busy=${imageBusy} onPick=${pickImage}
-          onRemove=${() => setDraft((d) => withoutImage(d))} />
+          onRecrop=${recrop} onRemove=${() => setDraft((d) => withoutImage(d))} />
 
         <${FieldGroup}>
           <${TextField} label="公演名" value=${draft.title} onChange=${set('title')} placeholder="必須" wrap />
@@ -126,11 +169,21 @@ export function EditView({ ticketId }) {
           <${TextField} label="" value=${draft.comment} onChange=${set('comment')} multiline />
         <//>
       </main>
+      ${cropping && html`
+        <${CropView}
+          source=${cropping.source}
+          initialQuad=${cropping.initialQuad}
+          autoQuad=${cropping.autoQuad}
+          busy=${imageBusy}
+          onCancel=${() => setCropping(null)}
+          onConfirm=${applyCrop}
+        />
+      `}
     </div>
   `;
 }
 
-function ImageSection({ draft, existing, busy, onPick, onRemove }) {
+function ImageSection({ draft, existing, busy, onPick, onRecrop, onRemove }) {
   const newThumbUrl = useObjectUrl(draft.imageChanged ? draft.image?.thumbnail : null);
   const camera = useRef(null);
   const library = useRef(null);
@@ -141,7 +194,7 @@ function ImageSection({ draft, existing, busy, onPick, onRemove }) {
   };
 
   let preview = null;
-  if (busy) preview = html`<div class="image-preview image-busy">画像を縮小中…</div>`;
+  if (busy) preview = html`<div class="image-preview image-busy">画像を処理中…</div>`;
   else if (newThumbUrl) preview = html`<img class="image-preview" src=${newThumbUrl} alt="選んだ画像" />`;
   else if (draft.hasImage && existing) preview = html`<div class="image-preview"><${Thumbnail} ticket=${existing} className="image-preview-thumb" /></div>`;
 
@@ -151,8 +204,13 @@ function ImageSection({ draft, existing, busy, onPick, onRemove }) {
       <div class="image-buttons">
         <button type="button" class="button" onClick=${() => camera.current.click()} disabled=${busy}>📷 撮影</button>
         <button type="button" class="button" onClick=${() => library.current.click()} disabled=${busy}>🖼️ 写真を選ぶ</button>
-        ${draft.hasImage && !busy && html`<button type="button" class="button danger-text" onClick=${onRemove}>外す</button>`}
       </div>
+      ${draft.hasImage && !busy && html`
+        <div class="image-buttons">
+          <button type="button" class="button" onClick=${onRecrop}>✂️ 切り抜き直す</button>
+          <button type="button" class="button danger-text" onClick=${onRemove}>外す</button>
+        </div>
+      `}
       <input ref=${camera} type="file" accept="image/*" capture="environment" hidden onChange=${onFile} />
       <input ref=${library} type="file" accept="image/*" hidden onChange=${onFile} />
     </section>

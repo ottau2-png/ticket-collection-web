@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import {
-  emptyDraft, draftFromTicket, canSave, ticketFromDraft, withImage, withoutImage, fillEmptyFields, overwriteFields, localDateString,
+  emptyDraft, draftFromTicket, canSave, ticketFromDraft, withImage, withRecrop, withoutImage, fillEmptyFields, overwriteFields, localDateString,
 } from '../../src/model/ticket.js';
 
 const now = new Date('2026-10-12T09:00:00Z');
@@ -129,4 +129,20 @@ test('AI の答えは入力済みの欄も上書きし、答えが空の項目�
 test('出演者は「、」でつないで入れる', () => {
   const { draft } = overwriteFields(emptyDraft(), { performerNames: ['A', 'B'] });
   assert.equal(draft.performerNames, 'A、B');
+});
+
+test('切り抜きの四隅は保存され、画像を外すと消える', () => {
+  const crop = [{ x: 0.1, y: 0.1 }, { x: 0.9, y: 0.1 }, { x: 0.9, y: 0.9 }, { x: 0.1, y: 0.9 }];
+  const draft = withImage({ ...emptyDraft('2026-01-01'), title: 'a' }, { original: 'o', thumbnail: 't', source: 's' }, crop);
+  const ticket = ticketFromDraft(draft, { id: 't', performerIds: [], now });
+  assert.deepEqual(ticket.crop, crop);
+  assert.deepEqual(draftFromTicket(ticket, new Map()).crop, crop);
+  assert.equal(ticketFromDraft(withoutImage(draft), { id: 't', performerIds: [], now }).crop, null);
+});
+
+test('切り抜き直しでは読み取り文字を残す', () => {
+  const draft = { ...emptyDraft(), hasImage: true, ocrText: '同じ写真の文字' };
+  const next = withRecrop(draft, { original: 'o2', thumbnail: 't2', source: 's' }, null);
+  assert.equal(next.ocrText, '同じ写真の文字');
+  assert.equal(next.imageChanged, true);
 });
