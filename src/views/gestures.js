@@ -37,7 +37,7 @@ export function useSwipeToReveal() {
         if (Math.abs(dx) < MOVE_THRESHOLD && Math.abs(dy) < MOVE_THRESHOLD) return;
         g.axis = Math.abs(dx) > Math.abs(dy) ? 'x' : 'y';
         if (g.axis === 'x') {
-          e.currentTarget.setPointerCapture?.(e.pointerId);
+          try { e.currentTarget.setPointerCapture?.(e.pointerId); } catch { /* 指がもう離れている */ }
           setDragging(true);
         }
       }

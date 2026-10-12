@@ -2,6 +2,9 @@
 // 新しい版が待機状態になったら onUpdate を呼ぶ。applyUpdate() で切り替えて再読み込みする。
 
 let waiting = null;
+// 「更新する」を押したときだけ再読み込みする。初回のインストールでも controllerchange が起きるので、
+// 条件なしで再読み込みすると、初めて開いた直後に入力中の画面が消える
+let updateRequested = false;
 
 export async function registerServiceWorker(swUrl, { onUpdate } = {}) {
   if (!('serviceWorker' in navigator)) return null;
@@ -25,7 +28,7 @@ export async function registerServiceWorker(swUrl, { onUpdate } = {}) {
 
   let reloading = false;
   navigator.serviceWorker.addEventListener('controllerchange', () => {
-    if (reloading) return;
+    if (reloading || !updateRequested) return;
     reloading = true;
     location.reload();
   });
@@ -38,6 +41,7 @@ export async function registerServiceWorker(swUrl, { onUpdate } = {}) {
 }
 
 export function applyUpdate() {
+  updateRequested = true;
   waiting?.postMessage('skipWaiting');
 }
 

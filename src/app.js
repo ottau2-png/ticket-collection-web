@@ -6,6 +6,8 @@ import { DataProvider, useTicketData } from './data.js';
 import { useRoute, goBack } from './router.js';
 import { ListView } from './views/list-view.js';
 import { SettingsView } from './views/settings-view.js';
+import { EditView } from './views/edit-view.js';
+import { DetailView } from './views/detail-view.js';
 import { releaseThumbnails } from './views/thumbnail.js';
 
 function App() {
@@ -51,7 +53,10 @@ function App() {
     <${DataProvider} value=${data}>
       <div class=${route.name === 'list' ? '' : 'hidden'}><${ListView} /></div>
       ${route.name === 'settings' && html`<${SettingsView} />`}
-      ${!['list', 'settings'].includes(route.name) && html`<${Placeholder} route=${route} />`}
+      ${route.name === 'new' && html`<${EditView} key="new" ticketId=${null} />`}
+      ${route.name === 'edit' && html`<${EditView} key=${`edit-${route.params[0]}`} ticketId=${route.params[0]} />`}
+      ${route.name === 'ticket' && html`<${DetailView} key=${route.params[0]} ticketId=${route.params[0]} />`}
+      ${!KNOWN_ROUTES.includes(route.name) && html`<${Placeholder} route=${route} />`}
       ${updateReady && html`
         <div class="banner" role="status">
           <span>新しい版があります</span>
@@ -62,9 +67,11 @@ function App() {
   `;
 }
 
+const KNOWN_ROUTES = ['list', 'settings', 'new', 'edit', 'ticket'];
+
 /** まだ作っていない画面 */
 function Placeholder({ route }) {
-  const names = { new: '半券の追加', ticket: '半券の詳細', edit: '半券の編集', performers: '出演者' };
+  const names = { performers: '出演者' };
   return html`
     <div class="screen">
       <header class="nav-bar">
