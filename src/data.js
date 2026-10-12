@@ -16,12 +16,14 @@ export function useTicketData() {
   const [data, setData] = useState({ tickets: [], performers: [] });
   const [error, setError] = useState(null);
   const [loaded, setLoaded] = useState(false);
+  const [lastExportAt, setLastExportAt] = useState(null);
 
   useEffect(() => {
     TicketStore.open()
       .then(async (s) => {
         setStore(s);
         setData(await s.loadAll());
+        setLastExportAt((await s.getMeta('lastExportAt')) ?? null);
         setLoaded(true);
       })
       .catch((e) => setError(e));
@@ -32,7 +34,14 @@ export function useTicketData() {
     setData(await store.loadAll());
   }, [store]);
 
+  /** バックアップを書き出したことを記録する（一覧の「バックアップを」の案内に使う） */
+  const recordExport = useCallback(async () => {
+    const now = new Date().toISOString();
+    await store.setMeta('lastExportAt', now);
+    setLastExportAt(now);
+  }, [store]);
+
   const performersById = useMemo(() => new Map(data.performers.map((p) => [p.id, p])), [data.performers]);
 
-  return { store, ...data, performersById, loaded, error, mutate };
+  return { store, ...data, performersById, loaded, error, mutate, lastExportAt, recordExport };
 }

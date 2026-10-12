@@ -336,3 +336,17 @@ details.card[open] summary { margin-bottom: 8px; }
 .chevron { color: var(--muted); font-size: 22px; flex-shrink: 0; }
 .small-thumb { width: 44px; height: 44px; font-size: 20px; }
 .sheet-body .plain-list { margin-top: 4px; }
+
+/* ---- バックアップ ---- */
+.backup .button.wide { margin-top: 10px; }
+.backup-last { font-size: 15px; margin: 8px 0; }
+.check { display: flex; gap: 8px; align-items: flex-start; font-size: 15px; margin: 8px 0; }
+.check input { margin-top: 4px; width: 18px; height: 18px; flex-shrink: 0; }
+.backup-progress { font-size: 15px; }
+.backup-progress progress { display: block; width: 100%; margin-top: 6px; }
+.import-plan { margin-top: 12px; padding: 12px; border: 1px solid var(--border); border-radius: 10px; background: var(--bg); }
+.import-plan ul, .error ul { margin: 6px 0; padding-left: 1.2em; }
+.backup-reminder {
+  display: block; margin: 10px 16px 0; padding: 10px 12px; border-radius: 10px; font-size: 14px;
+  background: var(--surface); border: 1px solid var(--border); color: var(--text); text-decoration: none;
+}

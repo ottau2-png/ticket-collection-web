@@ -124,6 +124,29 @@ export class TicketStore {
     });
   }
 
+  /**
+   * バックアップの読み込み（何回かに分けて呼ぶ）。同じ id は上書きする。
+   * @param items [{ ticket, images: { original, thumbnail, source? } | null }]
+   * @param last 最後の回なら、どの半券にも紐づかなくなった出演者を消す
+   */
+  async importBatch({ performers = [], items = [], last = false }) {
+    await this.#write(async (tx) => {
+      for (const p of performers) tx.objectStore('performers').put(p);
+      for (const { ticket, images } of items) {
+        tx.objectStore('tickets').put(ticket);
+        if (images) {
+          tx.objectStore('originals').put(images.original, ticket.id);
+          tx.objectStore('thumbnails').put(images.thumbnail, ticket.id);
+          if (images.source) tx.objectStore('sources').put(images.source, ticket.id);
+          else tx.objectStore('sources').delete(ticket.id);
+        } else {
+          for (const store of IMAGE_STORES) tx.objectStore(store).delete(ticket.id);
+        }
+      }
+      if (last) await removeOrphans(tx);
+    });
+  }
+
   /** トランザクションの中で fn を実行し、書き終わるまで待つ。fn が失敗したら取り消す */
   async #write(fn) {
     const tx = this.db.transaction(ALL_STORES, 'readwrite');

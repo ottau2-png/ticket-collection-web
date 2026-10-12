@@ -4,6 +4,7 @@ import { html } from '../html.js';
 import { useData } from '../data.js';
 import { LIST_MODES, groupTickets, filterTickets, viewableTickets } from '../model/grouping.js';
 import { setViewerOrder } from '../viewer-order.js';
+import { backupIsStale } from '../model/backup-reminder.js';
 import { performerNamesOf } from '../model/performers.js';
 import { ticketMetaLine, formatDate } from '../format.js';
 import { loadPref, savePref } from '../prefs.js';
@@ -24,7 +25,7 @@ function usePref(key, fallback, valid) {
 }
 
 export function ListView() {
-  const { tickets, performersById, mutate, loaded } = useData();
+  const { tickets, performersById, mutate, loaded, lastExportAt } = useData();
   const [mode, setMode] = usePref('listMode', 'newest', (v) => LIST_MODES.some((m) => m.id === v));
   const [layout, setLayout] = usePref('listLayout', 'list', (v) => v === 'list' || v === 'gallery');
   const [query, setQuery] = useState('');
@@ -80,6 +81,11 @@ export function ListView() {
       </header>
 
       <main class="list-body">
+        ${loaded && backupIsStale(lastExportAt, tickets.length) && html`
+          <a class="backup-reminder" href=${href('settings')}>
+            💾 ${lastExportAt ? '最後のバックアップから30日以上経っています' : 'まだバックアップを書き出していません'}。設定から書き出せます ›
+          </a>
+        `}
         ${empty && html`
           <div class="empty">
             <p>まだ半券がありません。</p>

@@ -1,9 +1,10 @@
-// 設定：版・データの保護・件数。バックアップは Phase 7 でここに足す。
+// 設定：件数・容量・データの保護・版、バックアップの書き出し・読み込み。
 import { useEffect, useState } from 'preact/hooks';
 import { html } from '../html.js';
 import { useData } from '../data.js';
 import { goBack } from '../router.js';
 import { serviceWorkerVersion } from '../sw-register.js';
+import { BackupSection } from './backup-section.js';
 
 export function SettingsView() {
   const { tickets, performers } = useData();
@@ -38,6 +39,7 @@ export function SettingsView() {
             </p>
           `}
         </section>
+        <${BackupSection} />
         <p class="note"><a href="dev/check.html">実機確認ページ</a></p>
       </main>
     </div>

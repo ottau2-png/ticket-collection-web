@@ -137,3 +137,25 @@ test('版1のデータベースから開き直しても、半券は残り source
   assert.ok(store.db.objectStoreNames.contains('sources'));
   assert.equal(await store.getSource('old'), undefined);
 });
+
+test('読み込み：半券・出演者・画像を書き、最後の回で孤立した出演者を消す', async () => {
+  const store = await openStore();
+  await saveFromForm(store, 't1', { title: '上書きされる', performerNames: '消える人', hasImage: true }, { image: { original: new Blob(['o']), thumbnail: new Blob(['t']), source: new Blob(['s']) } });
+  const base = { subtitle: '', category: '', performanceDate: '2026-10-10', openTime: null, startTime: null, venue: '', seat: {}, price: null, issuer: '', ocrText: '', comment: '', crop: null, createdAt: 'x', updatedAt: 'x' };
+  await store.importBatch({
+    performers: [{ id: 'p1', name: '読み込んだ人', reading: '', aliases: [] }],
+    items: [
+      { ticket: { ...base, id: 't1', title: '上書き後', performerIds: ['p1'], hasImage: false }, images: null },
+      { ticket: { ...base, id: 't2', title: '新しい', performerIds: ['p1'], hasImage: true }, images: { original: new Blob(['o2']), thumbnail: new Blob(['t2']), source: null } },
+    ],
+  });
+  // 最後の回の前は、孤立した出演者はまだ残る
+  assert.ok((await store.loadAll()).performers.some((p) => p.name === '消える人'));
+  await store.importBatch({ items: [], last: true });
+  const { tickets, performers } = await store.loadAll();
+  assert.deepEqual(tickets.map((t) => t.title).sort(), ['上書き後', '新しい']);
+  assert.deepEqual(performers.map((p) => p.name), ['読み込んだ人']);
+  assert.equal(await store.getOriginal('t1'), undefined);
+  assert.equal(await store.getSource('t1'), undefined);
+  assert.equal(await (await store.getThumbnail('t2')).text(), 't2');
+});
