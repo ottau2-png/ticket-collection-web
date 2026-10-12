@@ -91,7 +91,7 @@ Web で本当にできるかが怪しい所を、作り込む前に実機で確�
 - [x] `performers.js`：名前・別名での照合、入力から出演者の紐づけ（なければ作る）、統合（半券の付け替え＋元の名前・別名を統合先の別名へ）、孤立した出演者の削除
 - [x] `grouping.js`：新しい順／古い順／年ごと／出演者ごと／カテゴリーごと（件数・「出演者なし」「未設定」を最後・よみ順）、検索（公演名・ツアー名・カテゴリー・会場・出演者名と別名・コメント）
 - [x] `store/db.js`：tickets・performers・images（元画像・サムネイル）。保存・削除は1トランザクションで書き終えてから画面に戻す
-- [ ] 実機（Safari）で `dev/check.html` の「8. 保存の仕組み」が通る
+- [x] 実機（Safari）で `dev/check.html` の「8. 保存の仕組み」が通る
 - [x] iOS 版のテスト（`TicketCollectionTests/`）から、上の処理に当たるものを Node のテストに移す
 
 ### Phase 2：一覧
@@ -227,7 +227,7 @@ Web で本当にできるかが怪しい所を、作り込む前に実機で確�
 - 日付は 'YYYY-MM-DD'、時刻は 'HH:MM' の文字列で持つ（時差でずれないように。iOS 版の Date から変える）
 - 並び順は `Intl.Collator('ja', { numeric: true })`（英字→かな→漢字）。iOS 版の localizedStandardCompare 相当
 - iOS 版の一覧・出演者・統合・下書き・カテゴリーのテストを Node に移植し、同じ日の並び（開演の遅い順）などを追加。テスト 71件合格
-- 保存層は Node（fake-indexeddb）と Chromium で確認。Safari は `dev/check.html` の 8 で実機確認する
+- 保存層は Node（fake-indexeddb）と Chromium で確認。Safari も `dev/check.html` の 8 で実機確認済み（4項目すべて期待どおり）
 
 ### Phase 0（完了・2026-10-12）
 - 作ったもの：`index.html`（Preact の器・更新通知）、`sw.js`（全ファイルをキャッシュ、版ごとに入れ替え）、`manifest.webmanifest`、アイコン（`tools/make_icons.py`）、`src/image.js`（縮小）、`src/store/idb.js`、`dev/check.html`（実機確認ページ）
