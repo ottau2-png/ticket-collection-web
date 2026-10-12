@@ -1,6 +1,6 @@
 // アプリのファイルをすべてキャッシュし、オフラインでも開けるようにする。
 // ファイルを変えて公開するときは VERSION を上げる（上げないと古い版が使われ続ける）。
-const VERSION = '0.2.0';
+const VERSION = '0.2.1';
 const CACHE = `ticket-web-${VERSION}`;
 
 // tests/sw-precache.test.js が、アプリのファイルの漏れがないか確かめる
@@ -38,7 +38,8 @@ const PRECACHE = [
 ];
 
 self.addEventListener('install', (event) => {
-  event.waitUntil(caches.open(CACHE).then((cache) => cache.addAll(PRECACHE)));
+  // ブラウザの HTTP キャッシュ（GitHub Pages は最大10分）を通すと古いファイルを取り込んでしまうので、必ず取り直す
+  event.waitUntil(caches.open(CACHE).then((cache) => cache.addAll(PRECACHE.map((url) => new Request(url, { cache: 'reload' })))));
 });
 
 self.addEventListener('activate', (event) => {

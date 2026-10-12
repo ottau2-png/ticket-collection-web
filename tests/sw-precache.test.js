@@ -39,3 +39,8 @@ test('manifest のアイコンが存在する', () => {
   const manifest = JSON.parse(readFileSync(join(root, 'manifest.webmanifest'), 'utf8'));
   for (const icon of manifest.icons) assert.ok(existsSync(join(root, icon.src)), icon.src);
 });
+
+test('インストール時は HTTP キャッシュを通さずに取り直す', () => {
+  // 通すと、版の番号だけ新しく中身が古いファイルを取り込む（2026-10-12 に実機で発生）
+  assert.match(sw, /cache:\s*'reload'/);
+});
