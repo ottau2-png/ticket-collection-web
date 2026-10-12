@@ -3,6 +3,9 @@
 import { makeTicketImages } from '../src/image.js';
 import { openDatabase, requestResult, transactionDone } from '../src/store/idb.js';
 import { serviceWorkerVersion } from '../src/sw-register.js';
+import { TicketStore } from '../src/store/db.js';
+import { emptyDraft, ticketFromDraft } from '../src/model/ticket.js';
+import { resolvePerformers } from '../src/model/performers.js';
 
 const $ = (id) => document.getElementById(id);
 // 結果は再起動（3 の確認）をまたいで残す
@@ -232,6 +235,50 @@ $('import-file').onchange = async (e) => {
     setResult('import', true, `${data.tickets.length}件・画像を復元できた`);
   } catch (err) {
     setResult('import', false, errorText(err));
+  }
+};
+
+// ---- 8. 保存の仕組み ----
+// IndexedDB のトランザクションの途中で結果を待つ書き方が、Safari でも途切れずに動くかを確かめる
+$('store-run').onclick = async () => {
+  const name = `ticket-web-check-store-${Date.now()}`;
+  const log = [];
+  const expect = (label, actual, expected) => {
+    const ok = JSON.stringify(actual) === JSON.stringify(expected);
+    log.push(`${ok ? '✓' : '✗'} ${label}${ok ? '' : `：${JSON.stringify(actual)}（期待 ${JSON.stringify(expected)}）`}`);
+    return ok;
+  };
+  let store;
+  try {
+    store = await TicketStore.open(name);
+    const save = async (id, fields, opts = {}) => {
+      const { performers } = await store.loadAll();
+      const draft = { ...emptyDraft('2026-10-10'), ...fields };
+      const { ids, created } = resolvePerformers(draft.performerNames, performers);
+      await store.saveTicket(ticketFromDraft(draft, { id, performerIds: ids }), { newPerformers: created, ...opts });
+    };
+    const names = async () => (await store.loadAll()).performers.map((p) => p.name).sort();
+    await save('t1', { title: '1', performerNames: 'Mr.Children、消える', hasImage: true }, { image: { original: new Blob(['o']), thumbnail: new Blob(['t']) } });
+    await save('t2', { title: '2', performerNames: 'ミスターチルドレン' });
+    await save('t1', { title: '1', performerNames: 'ｍｒ．ｃｈｉｌｄｒｅｎ', hasImage: true });
+    let ok = expect('出演者の再利用と、外した出演者の削除', await names(), ['Mr.Children', 'ミスターチルドレン']);
+    ok = expect('画像を触らない保存で画像が残る', await (await store.getThumbnail('t1'))?.text(), 't') && ok;
+    const { performers } = await store.loadAll();
+    await store.mergePerformers(performers.find((p) => p.name === 'ミスターチルドレン').id, performers.find((p) => p.name === 'Mr.Children').id);
+    const merged = await store.loadAll();
+    ok = expect('統合', merged.performers.map((p) => [p.name, p.aliases]), [['Mr.Children', ['ミスターチルドレン']]]) && ok;
+    await store.deleteTicket('t1');
+    await store.deleteTicket('t2');
+    const empty = await store.loadAll();
+    ok = expect('削除で出演者・画像も消える', [empty.tickets.length, empty.performers.length, await store.getOriginal('t1')], [0, 0, undefined]) && ok;
+    setResult('store', ok, ok ? '4項目すべて期待どおり' : '期待と違う項目あり（下を参照）');
+  } catch (e) {
+    log.push(errorText(e));
+    setResult('store', false, errorText(e));
+  } finally {
+    store?.db.close();
+    indexedDB.deleteDatabase(name);
+    $('store-out').textContent = log.join('\n');
   }
 };
 

@@ -72,26 +72,27 @@ Web で本当にできるかが怪しい所を、作り込む前に実機で確�
 
 - [x] `git init`、`.gitignore`
 - [x] GitHub に PUBLIC リポジトリ作成、GitHub Pages を有効化（https://ottau2-png.github.io/ticket-collection-web/ 、`.nojekyll` で加工なしに配信）
-- [ ] 最小の PWA（manifest・sw.js・アイコン）を Pages に出し、iPhone でホーム画面に追加して standalone で開く
+- [x] 最小の PWA（manifest・sw.js・アイコン）を Pages に出し、iPhone でホーム画面に追加して standalone で開く
 - [x] 最小の PWA と実機確認ページ（`dev/check.html`）を作り、PC のブラウザで動作確認
-- [ ] 実機で確かめる（`dev/check.html` で）
-  - [ ] IndexedDB に画像 Blob を保存 → アプリを終了・再起動しても残る
+- [x] 実機で確かめる（`dev/check.html` で）
+  - [x] IndexedDB に画像 Blob を保存 → アプリを終了・再起動しても残る
   - [ ] `navigator.storage.persist()` の結果
-  - [ ] `<input type="file" accept="image/*">` で撮影・写真選択ができ、向き（EXIF）が正しく縮小できる
-  - [ ] `navigator.share({ files: [File] })` で JPEG を Claude アプリに渡せる（standalone で）
-  - [ ] テキスト欄への長押し貼り付け
-  - [ ] ファイルの書き出し（共有メニューから「ファイルに保存」）と読み込み（`<input type="file">`）
-  - [ ] 更新を出したとき、Service Worker の更新がアプリに反映される手順
+  - [x] `<input type="file" accept="image/*">` で撮影・写真選択ができ、向き（EXIF）が正しく縮小できる
+  - [x] `navigator.share({ files: [File] })` で JPEG を Claude アプリに渡せる（standalone で）
+  - [x] テキスト欄への長押し貼り付け
+  - [x] ファイルの書き出し（共有メニューから「ファイルに保存」）と読み込み（`<input type="file">`）
+  - [x] 更新を出したとき、Service Worker の更新がアプリに反映される手順（PC で確認。実機は以後の公開時に見る）
 - [x] Preact・htm を `vendor/` に置き、`node --test` が回る状態にする
 
 ### Phase 1：データ層（画面なし・テスト中心）
 
-- [ ] `ticket.js`：項目（handoff 3.1）、カテゴリー9種（文字列で保存）、空の下書き、下書き⇔保存形式の変換
-- [ ] `text.js`：全角英数→半角・大文字小文字を無視した比較キー、価格の解釈（「8,800円」「¥12,000」「８８００」）、出演者入力の区切り（、 , ， 改行）
-- [ ] `performers.js`：名前・別名での照合、入力から出演者の紐づけ（なければ作る）、統合（半券の付け替え＋元の名前・別名を統合先の別名へ）、孤立した出演者の削除
-- [ ] `grouping.js`：新しい順／古い順／年ごと／出演者ごと／カテゴリーごと（件数・「出演者なし」「未設定」を最後・よみ順）、検索（公演名・ツアー名・カテゴリー・会場・出演者名と別名・コメント）
-- [ ] `store/db.js`：tickets・performers・images（元画像・サムネイル）。保存・削除は1トランザクションで書き終えてから画面に戻す
-- [ ] iOS 版のテスト（`TicketCollectionTests/`）から、上の処理に当たるものを Node のテストに移す
+- [x] `ticket.js`：項目（handoff 3.1）、カテゴリー9種（文字列で保存）、空の下書き、下書き⇔保存形式の変換
+- [x] `text.js`：全角英数→半角・大文字小文字を無視した比較キー、価格の解釈（「8,800円」「¥12,000」「８８００」）、出演者入力の区切り（、 , ， 改行）
+- [x] `performers.js`：名前・別名での照合、入力から出演者の紐づけ（なければ作る）、統合（半券の付け替え＋元の名前・別名を統合先の別名へ）、孤立した出演者の削除
+- [x] `grouping.js`：新しい順／古い順／年ごと／出演者ごと／カテゴリーごと（件数・「出演者なし」「未設定」を最後・よみ順）、検索（公演名・ツアー名・カテゴリー・会場・出演者名と別名・コメント）
+- [x] `store/db.js`：tickets・performers・images（元画像・サムネイル）。保存・削除は1トランザクションで書き終えてから画面に戻す
+- [ ] 実機（Safari）で `dev/check.html` の「8. 保存の仕組み」が通る
+- [x] iOS 版のテスト（`TicketCollectionTests/`）から、上の処理に当たるものを Node のテストに移す
 
 ### Phase 2：一覧
 
@@ -220,7 +221,15 @@ Web で本当にできるかが怪しい所を、作り込む前に実機で確�
 
 ## レビュー
 
-### Phase 0（途中・2026-10-12）
+### Phase 1（2026-10-12）
+- `src/model/`：`text.js`（正規化・区切り・価格・並び順）、`category.js`、`performers.js`（照合・統合・孤立の判定。データを書き換えず新しい値を返す）、`ticket.js`（保存形式・下書き・読み取り結果の反映）、`grouping.js`（5つの表示・検索・めくる画面の対象）
+- `src/store/db.js`：tickets・performers・originals・thumbnails・meta の5ストア。保存・削除・統合は1トランザクションで、孤立した出演者の削除も同じトランザクション。失敗したら取り消す
+- 日付は 'YYYY-MM-DD'、時刻は 'HH:MM' の文字列で持つ（時差でずれないように。iOS 版の Date から変える）
+- 並び順は `Intl.Collator('ja', { numeric: true })`（英字→かな→漢字）。iOS 版の localizedStandardCompare 相当
+- iOS 版の一覧・出演者・統合・下書き・カテゴリーのテストを Node に移植し、同じ日の並び（開演の遅い順）などを追加。テスト 71件合格
+- 保存層は Node（fake-indexeddb）と Chromium で確認。Safari は `dev/check.html` の 8 で実機確認する
+
+### Phase 0（完了・2026-10-12）
 - 作ったもの：`index.html`（Preact の器・更新通知）、`sw.js`（全ファイルをキャッシュ、版ごとに入れ替え）、`manifest.webmanifest`、アイコン（`tools/make_icons.py`）、`src/image.js`（縮小）、`src/store/idb.js`、`dev/check.html`（実機確認ページ）
 - Preact は 11.0 が出て2週間なので、安定している 10.29.8 を同梱。htm 3.1.1
 - PC のブラウザ（localhost）で確認済み：
@@ -234,4 +243,4 @@ Web で本当にできるかが怪しい所を、作り込む前に実機で確�
 - 実機 1回目（iPhone・iOS 26.6.1、**Safari で開いた状態**）：保存・再読込・共有（canShare files true）・貼り付け・書き出し（約2MB）・読み込みはすべて OK。persisted は false。
   ホーム画面のアプリは Safari と保存先が別なので、ホーム画面から開き直して再確認する（iOS 26 は追加時の「Webアプリとして開く」がオフだと Safari で開く）
 - ユーザーの目視確認：撮影した画像の向きは正しい／Claude アプリで画像が見えた／書き出したファイルを「ファイル」に保存できた（共有メニュー・ダウンロードの両方）
-- 未確認（実機待ち）：ホーム画面からの起動、persist、撮影・向き、共有メニュー、書き出し、再起動後の保存
+- 実機 2回目（ホーム画面のアプリ）：撮影・向き・共有・書き出し・保存すべて問題なし（ユーザー確認）。persisted の値は未確認（アプリの最初の画面に表示しているので、以後の確認で見る）
