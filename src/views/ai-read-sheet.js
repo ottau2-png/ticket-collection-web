@@ -13,6 +13,7 @@ export function AIReadSheet({ hasImage, getImage, onApply, onClose }) {
   const [copyState, setCopyState] = useState(null);
   const [shareState, setShareState] = useState(null);
   const [showPrompt, setShowPrompt] = useState(false);
+  const [pasteState, setPasteState] = useState(null);
   const result = useMemo(() => (answer.trim() ? parseAIAnswer(answer) : null), [answer]);
 
   useEffect(() => {
@@ -31,6 +32,20 @@ export function AIReadSheet({ hasImage, getImage, onApply, onClose }) {
       // コピーできない環境では、指示文を表示して手で選んでもらう
       setCopyState('ng');
       setShowPrompt(true);
+    }
+  };
+
+  // クリップボードから文字だけを読む。長押しの貼り付けは書式つきのデータ（HTML）も受け取ろうとするので、
+  // ChatGPT の答えだと入力欄への貼り付けで固まることがある（メモへの貼り付けでは固まらない）
+  const pasteText = async () => {
+    setPasteState(null);
+    try {
+      const text = await navigator.clipboard.readText();
+      if (!text.trim()) throw new Error('クリップボードに文字がありません');
+      setAnswer(text);
+      setPasteState('ok');
+    } catch (e) {
+      setPasteState(e?.name === 'NotAllowedError' ? '読み込みが許可されませんでした' : (e.message ?? String(e)));
     }
   };
 
@@ -77,6 +92,10 @@ export function AIReadSheet({ hasImage, getImage, onApply, onClose }) {
             </li>
             <li>
               <p>AI の答えをコピーして、ここに貼り付ける</p>
+              <button class="button" onClick=${pasteText}>📥 コピーした答えを読み込む</button>
+              ${pasteState === 'ok' && html`<span class="step-done">読み込みました（${answer.length}文字）</span>`}
+              ${pasteState && pasteState !== 'ok' && html`<p class="note error-text">${pasteState}</p>`}
+              <p class="note">ChatGPT の答えは、長押しの貼り付けだと固まることがあるので、このボタンを使ってください。</p>
               <textarea
                 class="answer-input"
                 rows="6"

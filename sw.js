@@ -1,6 +1,6 @@
 // アプリのファイルをすべてキャッシュし、オフラインでも開けるようにする。
 // ファイルを変えて公開するときは VERSION を上げる（上げないと古い版が使われ続ける）。
-const VERSION = '0.5.0';
+const VERSION = '0.5.1';
 const CACHE = `ticket-web-${VERSION}`;
 
 // tests/sw-precache.test.js が、アプリのファイルの漏れがないか確かめる
