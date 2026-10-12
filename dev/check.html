@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>実機確認</title>
+  <style>
+    :root { color-scheme: light dark; --border: #8884; --ok: #1a7f37; --ng: #c62828; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; font-family: -apple-system, "Hiragino Sans", sans-serif; font-size: 16px; line-height: 1.5;
+      padding: calc(12px + env(safe-area-inset-top)) 16px calc(24px + env(safe-area-inset-bottom));
+      -webkit-text-size-adjust: 100%;
+    }
+    h1 { font-size: 20px; margin: 0 0 8px; }
+    section { border: 1px solid var(--border); border-radius: 10px; padding: 12px; margin: 12px 0; }
+    h2 { font-size: 16px; margin: 0 0 8px; }
+    button, label.button {
+      display: inline-block; font: inherit; padding: 8px 12px; margin: 4px 4px 4px 0;
+      border: 1px solid var(--border); border-radius: 8px; background: #8881; color: inherit;
+    }
+    input[type=file] { display: none; }
+    textarea { width: 100%; min-height: 120px; font: inherit; font-size: 16px; }
+    pre { white-space: pre-wrap; word-break: break-all; font-size: 13px; margin: 6px 0 0; }
+    .status { font-weight: bold; }
+    .ok { color: var(--ok); }
+    .ng { color: var(--ng); }
+    img { max-width: 48%; height: auto; border: 1px solid var(--border); margin: 4px 4px 0 0; vertical-align: top; }
+  </style>
+</head>
+<body>
+  <h1>実機確認（Phase 0）</h1>
+  <p>ホーム画面に追加したアプリから開いて、上から順に試してください。最後に「結果をコピー」で結果を貼り付けてもらえれば読みます。</p>
+  <p><a href="../">← アプリに戻る</a></p>
+
+  <section id="env">
+    <h2>1. 環境</h2>
+    <pre id="env-out"></pre>
+    <button id="persist">データの保護を求める（persist）</button>
+  </section>
+
+  <section id="image">
+    <h2>2. 画像を選んで縮小・保存</h2>
+    <label class="button">写真を選ぶ<input id="pick" type="file" accept="image/*"></label>
+    <label class="button">カメラで撮る<input id="camera" type="file" accept="image/*" capture="environment"></label>
+    <div class="status" id="image-status"></div>
+    <pre id="image-out"></pre>
+    <div id="image-preview"></div>
+  </section>
+
+  <section id="restore">
+    <h2>3. 再起動後も残っているか</h2>
+    <p>2 のあとアプリを完全に終了（上にスワイプ）して開き直し、ここを見てください。</p>
+    <button id="reload-saved">保存した画像を読み直す</button>
+    <div class="status" id="restore-status"></div>
+    <pre id="restore-out"></pre>
+    <div id="restore-preview"></div>
+  </section>
+
+  <section id="share">
+    <h2>4. 画像を共有メニューで AI アプリに渡す</h2>
+    <button id="share-image">保存した画像を共有</button>
+    <div class="status" id="share-status"></div>
+    <pre id="share-out"></pre>
+  </section>
+
+  <section id="paste">
+    <h2>5. AI の答えを貼り付け</h2>
+    <textarea id="paste-area" placeholder="ここを長押しして貼り付け"></textarea>
+    <div class="status" id="paste-status"></div>
+  </section>
+
+  <section id="export">
+    <h2>6. バックアップの書き出し</h2>
+    <button id="export-share">共有メニューで書き出す</button>
+    <button id="export-download">ダウンロードで書き出す</button>
+    <div class="status" id="export-status"></div>
+    <pre id="export-out"></pre>
+  </section>
+
+  <section id="import">
+    <h2>7. バックアップの読み込み</h2>
+    <label class="button">ファイルを選ぶ<input id="import-file" type="file" accept=".json,application/json"></label>
+    <div class="status" id="import-status"></div>
+    <pre id="import-out"></pre>
+    <div id="import-preview"></div>
+  </section>
+
+  <section id="summary">
+    <h2>結果</h2>
+    <button id="copy-results">結果をコピー</button>
+    <span id="copy-status"></span>
+    <pre id="summary-out"></pre>
+  </section>
+
+  <script type="module" src="check.js"></script>
+</body>
+</html>

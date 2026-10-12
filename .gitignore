@@ -1,0 +1,4 @@
+.DS_Store
+node_modules/
+# 実物の半券の写真や読み取り結果を置く場所（コミットしない）
+private/

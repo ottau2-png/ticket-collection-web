@@ -1,0 +1,1391 @@
+{
+  "_説明": "iOS版（ticket-collection）のテストから取り出した、半券のOCR結果。氏名・電話番号・チケット番号・URLは架空の値に置き換え済み。座標は画像に対する正規化座標（0〜1、原点は左下＝Vision の座標系）。",
+  "fixtures": [
+    {
+      "name": "e+ 指定席（実物・NOEL GALLAGHER'S HIGH FLYING BIRDS 2023）",
+      "source": "TicketParserTests.parsesRealEplusTicket",
+      "lines": [
+        {
+          "text": "NOEL GALLAGHER' S HIGH FLYING BIRDS",
+          "box": {
+            "x": 0.05,
+            "y": 0.95,
+            "width": 0.6,
+            "height": 0.05
+          }
+        },
+        {
+          "text": "2023 JAPAN TOUR",
+          "box": {
+            "x": 0.05,
+            "y": 0.87,
+            "width": 0.6,
+            "height": 0.04
+          }
+        },
+        {
+          "text": "主産：テレビ朝日／J-WAVE",
+          "box": {
+            "x": 0.05,
+            "y": 0.79,
+            "width": 0.6,
+            "height": 0.02
+          }
+        },
+        {
+          "text": "協力：Sony Music Japan internationai",
+          "box": {
+            "x": 0.05,
+            "y": 0.71,
+            "width": 0.6,
+            "height": 0.02
+          }
+        },
+        {
+          "text": "お問合せ： HOT STUFF 000-0000-0000",
+          "box": {
+            "x": 0.05,
+            "y": 0.63,
+            "width": 0.6,
+            "height": 0.02
+          }
+        },
+        {
+          "text": "D00000000000000",
+          "box": {
+            "x": 0.05,
+            "y": 0.55,
+            "width": 0.6,
+            "height": 0.02
+          }
+        },
+        {
+          "text": "SMASH 00-0000-0000 https:/example.com/",
+          "box": {
+            "x": 0.05,
+            "y": 0.47,
+            "width": 0.6,
+            "height": 0.02
+          }
+        },
+        {
+          "text": "＊未就学児入場不可",
+          "box": {
+            "x": 0.05,
+            "y": 0.39,
+            "width": 0.6,
+            "height": 0.02
+          }
+        },
+        {
+          "text": "東京ガーデンシアター",
+          "box": {
+            "x": 0.05,
+            "y": 0.31,
+            "width": 0.6,
+            "height": 0.035
+          }
+        },
+        {
+          "text": "2023年12月",
+          "box": {
+            "x": 0.05,
+            "y": 0.23,
+            "width": 0.6,
+            "height": 0.03
+          }
+        },
+        {
+          "text": "2日（土）",
+          "box": {
+            "x": 0.05,
+            "y": 0.15,
+            "width": 0.6,
+            "height": 0.03
+          }
+        },
+        {
+          "text": "17:00",
+          "box": {
+            "x": 0.05,
+            "y": 0.07,
+            "width": 0.6,
+            "height": 0.03
+          }
+        },
+        {
+          "text": "開場",
+          "box": {
+            "x": 0.05,
+            "y": -0.01,
+            "width": 0.6,
+            "height": 0.02
+          }
+        },
+        {
+          "text": "1800",
+          "box": {
+            "x": 0.05,
+            "y": -0.09,
+            "width": 0.6,
+            "height": 0.03
+          }
+        },
+        {
+          "text": "開演",
+          "box": {
+            "x": 0.05,
+            "y": -0.17,
+            "width": 0.6,
+            "height": 0.02
+          }
+        },
+        {
+          "text": "SS席",
+          "box": {
+            "x": 0.05,
+            "y": -0.25,
+            "width": 0.6,
+            "height": 0.03
+          }
+        },
+        {
+          "text": "2 F",
+          "box": {
+            "x": 0.05,
+            "y": -0.33,
+            "width": 0.6,
+            "height": 0.03
+          }
+        },
+        {
+          "text": "¥15,000（税込）",
+          "box": {
+            "x": 0.05,
+            "y": -0.41,
+            "width": 0.6,
+            "height": 0.02
+          }
+        },
+        {
+          "text": "アリーナ",
+          "box": {
+            "x": 0.05,
+            "y": -0.49,
+            "width": 0.6,
+            "height": 0.03
+          }
+        },
+        {
+          "text": "AL ３扉",
+          "box": {
+            "x": 0.05,
+            "y": -0.57,
+            "width": 0.6,
+            "height": 0.03
+          }
+        },
+        {
+          "text": "XAブロック",
+          "box": {
+            "x": 0.05,
+            "y": -0.65,
+            "width": 0.6,
+            "height": 0.03
+          }
+        },
+        {
+          "text": "5列",
+          "box": {
+            "x": 0.05,
+            "y": -0.73,
+            "width": 0.6,
+            "height": 0.03
+          }
+        },
+        {
+          "text": "20番",
+          "box": {
+            "x": 0.05,
+            "y": -0.81,
+            "width": 0.6,
+            "height": 0.03
+          }
+        },
+        {
+          "text": "山田　太郎",
+          "box": {
+            "x": 0.05,
+            "y": -0.89,
+            "width": 0.6,
+            "height": 0.03
+          }
+        },
+        {
+          "text": "様",
+          "box": {
+            "x": 0.05,
+            "y": -0.97,
+            "width": 0.6,
+            "height": 0.02
+          }
+        },
+        {
+          "text": "＜営利目的の転売禁止＞",
+          "box": {
+            "x": 0.05,
+            "y": -1.05,
+            "width": 0.6,
+            "height": 0.02
+          }
+        },
+        {
+          "text": "チケットのお問合せ先",
+          "box": {
+            "x": 0.05,
+            "y": -1.13,
+            "width": 0.6,
+            "height": 0.02
+          }
+        },
+        {
+          "text": "＋（イープラス） https://example.jp/aa/",
+          "box": {
+            "x": 0.05,
+            "y": -1.21,
+            "width": 0.6,
+            "height": 0.02
+          }
+        },
+        {
+          "text": "e",
+          "box": {
+            "x": 0.05,
+            "y": -1.29,
+            "width": 0.6,
+            "height": 0.02
+          }
+        },
+        {
+          "text": "発券店",
+          "box": {
+            "x": 0.05,
+            "y": -1.37,
+            "width": 0.6,
+            "height": 0.02
+          }
+        },
+        {
+          "text": "000000000000",
+          "box": {
+            "x": 0.05,
+            "y": -1.45,
+            "width": 0.6,
+            "height": 0.02
+          }
+        },
+        {
+          "text": "※ Family Mart",
+          "box": {
+            "x": 0.05,
+            "y": -1.53,
+            "width": 0.6,
+            "height": 0.02
+          }
+        },
+        {
+          "text": "イープラス",
+          "box": {
+            "x": 0.05,
+            "y": -1.61,
+            "width": 0.6,
+            "height": 0.02
+          }
+        }
+      ],
+      "expected": {
+        "title": "NOEL GALLAGHER' S HIGH FLYING BIRDS",
+        "subtitle": "2023 JAPAN TOUR",
+        "venue": "東京ガーデンシアター",
+        "price": 15000
+      },
+      "note": "日付が「2023年12月」「2日（土）」の2行に分かれ、開演は「1800」とコロンが落ちている"
+    },
+    {
+      "name": "e+ スタンディング（実物・THE POGUES 2012）",
+      "source": "TicketParserTests.parsesStandingTicketWithDrinkChargeAndQueueNumber",
+      "lines": [
+        {
+          "text": "★THE POGUES★",
+          "box": {
+            "x": 0.05,
+            "y": 0.95,
+            "width": 0.6,
+            "height": 0.05
+          }
+        },
+        {
+          "text": "お問合せ◆SMASH 00-0000-0000",
+          "box": {
+            "x": 0.05,
+            "y": 0.87,
+            "width": 0.6,
+            "height": 0.02
+          }
+        },
+        {
+          "text": "http://example-jpn.",
+          "box": {
+            "x": 0.05,
+            "y": 0.79,
+            "width": 0.6,
+            "height": 0.02
+          }
+        },
+        {
+          "text": "com",
+          "box": {
+            "x": 0.05,
+            "y": 0.71,
+            "width": 0.6,
+            "height": 0.02
+          }
+        },
+        {
+          "text": "http://example-mobile.com",
+          "box": {
+            "x": 0.05,
+            "y": 0.63,
+            "width": 0.6,
+            "height": 0.02
+          }
+        },
+        {
+          "text": "※ご入場時にドリンク代¥500お支払い頂きます。",
+          "box": {
+            "x": 0.05,
+            "y": 0.55,
+            "width": 0.6,
+            "height": 0.02
+          }
+        },
+        {
+          "text": "03月14日（水） 19:31 レジ#1責047",
+          "box": {
+            "x": 0.05,
+            "y": 0.47,
+            "width": 0.6,
+            "height": 0.02
+          }
+        },
+        {
+          "text": "04枚/04枚中払込票：0000000000000",
+          "box": {
+            "x": 0.05,
+            "y": 0.39,
+            "width": 0.6,
+            "height": 0.02
+          }
+        },
+        {
+          "text": "P00000000LtII9P",
+          "box": {
+            "x": 0.05,
+            "y": 0.31,
+            "width": 0.6,
+            "height": 0.02
+          }
+        },
+        {
+          "text": "【SMASH",
+          "box": {
+            "x": 0.05,
+            "y": 0.23,
+            "width": 0.6,
+            "height": 0.025
+          }
+        },
+        {
+          "text": "friends】",
+          "box": {
+            "x": 0.05,
+            "y": 0.15,
+            "width": 0.6,
+            "height": 0.025
+          }
+        },
+        {
+          "text": "studiocoast",
+          "box": {
+            "x": 0.05,
+            "y": 0.07,
+            "width": 0.6,
+            "height": 0.03
+          }
+        },
+        {
+          "text": "2012年3月28日（水）",
+          "box": {
+            "x": 0.05,
+            "y": -0.01,
+            "width": 0.6,
+            "height": 0.03
+          }
+        },
+        {
+          "text": "18:00開場",
+          "box": {
+            "x": 0.05,
+            "y": -0.09,
+            "width": 0.6,
+            "height": 0.03
+          }
+        },
+        {
+          "text": "19:00開演",
+          "box": {
+            "x": 0.05,
+            "y": -0.17,
+            "width": 0.6,
+            "height": 0.03
+          }
+        },
+        {
+          "text": "スタンディング",
+          "box": {
+            "x": 0.05,
+            "y": -0.25,
+            "width": 0.6,
+            "height": 0.03
+          }
+        },
+        {
+          "text": "¥7,000（税込）",
+          "box": {
+            "x": 0.05,
+            "y": -0.33,
+            "width": 0.6,
+            "height": 0.03
+          }
+        },
+        {
+          "text": "整理番号Ａ",
+          "box": {
+            "x": 0.05,
+            "y": -0.41,
+            "width": 0.6,
+            "height": 0.03
+          }
+        },
+        {
+          "text": "71番",
+          "box": {
+            "x": 0.05,
+            "y": -0.49,
+            "width": 0.6,
+            "height": 0.03
+          }
+        },
+        {
+          "text": "＜営利目的の転売禁止＞",
+          "box": {
+            "x": 0.05,
+            "y": -0.57,
+            "width": 0.6,
+            "height": 0.02
+          }
+        },
+        {
+          "text": "チケットのお問合せ先：",
+          "box": {
+            "x": 0.05,
+            "y": -0.65,
+            "width": 0.6,
+            "height": 0.02
+          }
+        },
+        {
+          "text": "株式会社エンタテインメントプラス 0000-00-00 000",
+          "box": {
+            "x": 0.05,
+            "y": -0.73,
+            "width": 0.6,
+            "height": 0.02
+          }
+        },
+        {
+          "text": "発券店：セブン－イレブン",
+          "box": {
+            "x": 0.05,
+            "y": -0.81,
+            "width": 0.6,
+            "height": 0.02
+          }
+        },
+        {
+          "text": "サンプル1丁目店",
+          "box": {
+            "x": 0.05,
+            "y": -0.89,
+            "width": 0.6,
+            "height": 0.02
+          }
+        },
+        {
+          "text": "000000000000",
+          "box": {
+            "x": 0.05,
+            "y": -0.97,
+            "width": 0.6,
+            "height": 0.02
+          }
+        }
+      ],
+      "expected": {
+        "title": "THE POGUES",
+        "venue": "studiocoast",
+        "price": 7000
+      },
+      "note": "会場名に「ホール」等が付かない（日付の直上の行を会場とみなす）、ドリンク代¥500を価格にしない、公演名の★を除く"
+    },
+    {
+      "name": "1行に複数項目（架空・ローチケ風）",
+      "source": "TicketParserTests.parsesSingleLineLayout",
+      "lines": [
+        {
+          "text": "サンプルバンド LIVE TOUR 2026",
+          "box": {
+            "x": 0.05,
+            "y": 0.95,
+            "width": 0.6,
+            "height": 0.06
+          }
+        },
+        {
+          "text": "2026年11月3日(火・祝) 開場17:00 / 開演18:00",
+          "box": {
+            "x": 0.05,
+            "y": 0.87,
+            "width": 0.6,
+            "height": 0.04
+          }
+        },
+        {
+          "text": "会場：横浜アリーナ",
+          "box": {
+            "x": 0.05,
+            "y": 0.79,
+            "width": 0.6,
+            "height": 0.04
+          }
+        },
+        {
+          "text": "アリーナ Bブロック 7列 23番",
+          "box": {
+            "x": 0.05,
+            "y": 0.71,
+            "width": 0.6,
+            "height": 0.045
+          }
+        },
+        {
+          "text": "全席指定 ¥9,800（税込） ローソンチケット",
+          "box": {
+            "x": 0.05,
+            "y": 0.63,
+            "width": 0.6,
+            "height": 0.03
+          }
+        }
+      ],
+      "expected": {
+        "title": "サンプルバンド LIVE TOUR 2026",
+        "subtitle": null,
+        "venue": "横浜アリーナ",
+        "price": 9800
+      }
+    },
+    {
+      "name": "発券元の行が先頭（架空・劇場券）",
+      "source": "TicketParserTests.parsesLabelFirstTheaterTicket",
+      "lines": [
+        {
+          "text": "チケットぴあ",
+          "box": {
+            "x": 0.05,
+            "y": 0.95,
+            "width": 0.6,
+            "height": 0.02
+          }
+        },
+        {
+          "text": "劇団サンプル 冬公演「架空の物語」",
+          "box": {
+            "x": 0.05,
+            "y": 0.87,
+            "width": 0.6,
+            "height": 0.05
+          }
+        },
+        {
+          "text": "令和8年1月15日(木)",
+          "box": {
+            "x": 0.05,
+            "y": 0.79,
+            "width": 0.6,
+            "height": 0.03
+          }
+        },
+        {
+          "text": "開場",
+          "box": {
+            "x": 0.05,
+            "y": 0.71,
+            "width": 0.6,
+            "height": 0.02
+          }
+        },
+        {
+          "text": "18:30",
+          "box": {
+            "x": 0.05,
+            "y": 0.63,
+            "width": 0.6,
+            "height": 0.03
+          }
+        },
+        {
+          "text": "開演",
+          "box": {
+            "x": 0.05,
+            "y": 0.55,
+            "width": 0.6,
+            "height": 0.02
+          }
+        },
+        {
+          "text": "19:00",
+          "box": {
+            "x": 0.05,
+            "y": 0.47,
+            "width": 0.6,
+            "height": 0.03
+          }
+        },
+        {
+          "text": "サンプル劇場",
+          "box": {
+            "x": 0.05,
+            "y": 0.39,
+            "width": 0.6,
+            "height": 0.03
+          }
+        },
+        {
+          "text": "1階 C列 12番",
+          "box": {
+            "x": 0.05,
+            "y": 0.31,
+            "width": 0.6,
+            "height": 0.03
+          }
+        },
+        {
+          "text": "S席 8,500円",
+          "box": {
+            "x": 0.05,
+            "y": 0.23,
+            "width": 0.6,
+            "height": 0.03
+          }
+        }
+      ],
+      "expected": {
+        "title": "劇団サンプル 冬公演「架空の物語」",
+        "venue": "サンプル劇場",
+        "price": 8500
+      }
+    },
+    {
+      "name": "チケットぴあ 立見（実物・FLOGGING MOLLY 2005）：縮めずに読んだ結果（縦書きと誤認して崩れる）",
+      "source": "TicketReaderTests.unsqueezed",
+      "imageSize": {
+        "width": 4032,
+        "height": 3024
+      },
+      "lines": [
+        {
+          "text": "I",
+          "box": {
+            "x": 0.447,
+            "y": 0.6795,
+            "width": 0.022,
+            "height": 0.021
+          }
+        },
+        {
+          "text": "OLLY",
+          "box": {
+            "x": 0.7,
+            "y": 0.6705,
+            "width": 0.194,
+            "height": 0.027
+          }
+        },
+        {
+          "text": "GAO",
+          "box": {
+            "x": 0.389,
+            "y": 0.642,
+            "width": 0.039,
+            "height": 0.06
+          }
+        },
+        {
+          "text": "お問合せく",
+          "box": {
+            "x": 0.108,
+            "y": 0.622,
+            "width": 0.148,
+            "height": 0.046
+          }
+        },
+        {
+          "text": "Noesaao",
+          "box": {
+            "x": 0.492,
+            "y": 0.5705,
+            "width": 0.033,
+            "height": 0.129
+          }
+        },
+        {
+          "text": "200560編",
+          "box": {
+            "x": 0.607,
+            "y": 0.5655,
+            "width": 0.082,
+            "height": 0.137
+          }
+        },
+        {
+          "text": "CRo4hh支",
+          "box": {
+            "x": 0.544,
+            "y": 0.5685,
+            "width": 0.036,
+            "height": 0.129
+          }
+        },
+        {
+          "text": "TR一mmo",
+          "box": {
+            "x": 0.469,
+            "y": 0.571,
+            "width": 0.028,
+            "height": 0.11
+          }
+        },
+        {
+          "text": "GAISpロン売は",
+          "box": {
+            "x": 0.322,
+            "y": 0.5325,
+            "width": 0.057,
+            "height": 0.173
+          }
+        },
+        {
+          "text": "BShhに的",
+          "box": {
+            "x": 0.25,
+            "y": 0.552,
+            "width": 0.028,
+            "height": 0.11
+          }
+        },
+        {
+          "text": "0OPM 開場29",
+          "box": {
+            "x": 0.287,
+            "y": 0.4775,
+            "width": 0.306,
+            "height": 0.069
+          }
+        },
+        {
+          "text": "OOPM",
+          "box": {
+            "x": 0.669,
+            "y": 0.4955,
+            "width": 0.114,
+            "height": 0.019
+          }
+        },
+        {
+          "text": "【消費税込み】",
+          "box": {
+            "x": 0.144,
+            "y": 0.439,
+            "width": 0.178,
+            "height": 0.028
+          }
+        },
+        {
+          "text": "チケットぴあ Pal 0",
+          "box": {
+            "x": 0.103,
+            "y": 0.3815,
+            "width": 0.339,
+            "height": 0.023
+          }
+        }
+      ]
+    },
+    {
+      "name": "チケットぴあ 立見（実物・FLOGGING MOLLY 2005）：横0.55倍に縮めて読んだ結果",
+      "source": "TicketReaderTests.squeezed055",
+      "imageSize": {
+        "width": 4032,
+        "height": 3024
+      },
+      "lines": [
+        {
+          "text": "FLOGGING MOLL",
+          "box": {
+            "x": 0.174,
+            "y": 0.674,
+            "width": 0.681,
+            "height": 0.03
+          }
+        },
+        {
+          "text": "JAPAN",
+          "box": {
+            "x": 0.304,
+            "y": 0.663,
+            "width": 0.154,
+            "height": 0.018
+          }
+        },
+        {
+          "text": "TOUR 2005",
+          "box": {
+            "x": 0.458,
+            "y": 0.6615,
+            "width": 0.258,
+            "height": 0.019
+          }
+        },
+        {
+          "text": "協",
+          "box": {
+            "x": 0.108,
+            "y": 0.6455,
+            "width": 0.038,
+            "height": 0.019
+          }
+        },
+        {
+          "text": "7◆BUT 1on KecOrdS",
+          "box": {
+            "x": 0.195,
+            "y": 0.6405,
+            "width": 0.468,
+            "height": 0.021
+          }
+        },
+        {
+          "text": "お問合せ◆SMASh 00-0000-0000",
+          "box": {
+            "x": 0.112,
+            "y": 0.6255,
+            "width": 0.634,
+            "height": 0.019
+          }
+        },
+        {
+          "text": "nttp://example-lon.com",
+          "box": {
+            "x": 0.249,
+            "y": 0.602,
+            "width": 0.548,
+            "height": 0.024
+          }
+        },
+        {
+          "text": "※入場時にドリンク代¥500お支払い頂きます。",
+          "box": {
+            "x": 0.132,
+            "y": 0.5665,
+            "width": 0.631,
+            "height": 0.029
+          }
+        },
+        {
+          "text": "※営利目的の転売禁止",
+          "box": {
+            "x": 0.129,
+            "y": 0.5535,
+            "width": 0.292,
+            "height": 0.021
+          }
+        },
+        {
+          "text": "LIQUI DROOM",
+          "box": {
+            "x": 0.116,
+            "y": 0.5325,
+            "width": 0.522,
+            "height": 0.021
+          }
+        },
+        {
+          "text": "2005",
+          "box": {
+            "x": 0.129,
+            "y": 0.5175,
+            "width": 0.2,
+            "height": 0.019
+          }
+        },
+        {
+          "text": "600PMHA 9.14",
+          "box": {
+            "x": 0.23,
+            "y": 0.481,
+            "width": 0.423,
+            "height": 0.06
+          }
+        },
+        {
+          "text": "7:00PM 開",
+          "box": {
+            "x": 0.62,
+            "y": 0.498,
+            "width": 0.243,
+            "height": 0.016
+          }
+        },
+        {
+          "text": "立見",
+          "box": {
+            "x": 0.108,
+            "y": 0.4775,
+            "width": 0.108,
+            "height": 0.021
+          }
+        },
+        {
+          "text": "¥4，",
+          "box": {
+            "x": 0.108,
+            "y": 0.4605,
+            "width": 0.067,
+            "height": 0.019
+          }
+        },
+        {
+          "text": "700",
+          "box": {
+            "x": 0.187,
+            "y": 0.4605,
+            "width": 0.087,
+            "height": 0.017
+          }
+        },
+        {
+          "text": "【消費税込み】",
+          "box": {
+            "x": 0.142,
+            "y": 0.44,
+            "width": 0.183,
+            "height": 0.022
+          }
+        },
+        {
+          "text": "A MA",
+          "box": {
+            "x": 0.746,
+            "y": 0.4225,
+            "width": 0.093,
+            "height": 0.017
+          }
+        },
+        {
+          "text": "779番",
+          "box": {
+            "x": 0.646,
+            "y": 0.403,
+            "width": 0.184,
+            "height": 0.018
+          }
+        },
+        {
+          "text": "0000000000000001",
+          "box": {
+            "x": 0.667,
+            "y": 0.384,
+            "width": 0.196,
+            "height": 0.018
+          }
+        },
+        {
+          "text": "チケットびあ Pal 10",
+          "box": {
+            "x": 0.1,
+            "y": 0.3835,
+            "width": 0.346,
+            "height": 0.019
+          }
+        }
+      ]
+    },
+    {
+      "name": "チケットぴあ 立見（実物・FLOGGING MOLLY 2005）：横0.5倍",
+      "source": "TicketReaderTests.squeezed050",
+      "imageSize": {
+        "width": 4032,
+        "height": 3024
+      },
+      "lines": [
+        {
+          "text": "FLOGGING",
+          "box": {
+            "x": 0.174,
+            "y": 0.678,
+            "width": 0.432,
+            "height": 0.026
+          }
+        },
+        {
+          "text": "SMOLLY",
+          "box": {
+            "x": 0.599,
+            "y": 0.6695,
+            "width": 0.33,
+            "height": 0.029
+          }
+        },
+        {
+          "text": "JAPAN TOUR 2005",
+          "box": {
+            "x": 0.303,
+            "y": 0.6605,
+            "width": 0.414,
+            "height": 0.021
+          }
+        },
+        {
+          "text": "力◆Bullion Records",
+          "box": {
+            "x": 0.174,
+            "y": 0.64,
+            "width": 0.49,
+            "height": 0.024
+          }
+        },
+        {
+          "text": "nttp://example-lon.com",
+          "box": {
+            "x": 0.249,
+            "y": 0.603,
+            "width": 0.552,
+            "height": 0.022
+          }
+        },
+        {
+          "text": "※入場時にドリンク代¥500お支払い頂きます。",
+          "box": {
+            "x": 0.132,
+            "y": 0.565,
+            "width": 0.636,
+            "height": 0.03
+          }
+        },
+        {
+          "text": "※営利目的の転売禁止",
+          "box": {
+            "x": 0.133,
+            "y": 0.552,
+            "width": 0.288,
+            "height": 0.022
+          }
+        },
+        {
+          "text": "LIQUIDROOM",
+          "box": {
+            "x": 0.12,
+            "y": 0.533,
+            "width": 0.517,
+            "height": 0.02
+          }
+        },
+        {
+          "text": "2005",
+          "box": {
+            "x": 0.125,
+            "y": 0.517,
+            "width": 0.205,
+            "height": 0.018
+          }
+        },
+        {
+          "text": "9",
+          "box": {
+            "x": 0.421,
+            "y": 0.517,
+            "width": 0.033,
+            "height": 0.016
+          }
+        },
+        {
+          "text": "29（木）",
+          "box": {
+            "x": 0.492,
+            "y": 0.5155,
+            "width": 0.171,
+            "height": 0.019
+          }
+        },
+        {
+          "text": "6:00PM",
+          "box": {
+            "x": 0.233,
+            "y": 0.498,
+            "width": 0.18,
+            "height": 0.02
+          }
+        },
+        {
+          "text": "7:00PM 開演",
+          "box": {
+            "x": 0.617,
+            "y": 0.4945,
+            "width": 0.254,
+            "height": 0.021
+          }
+        },
+        {
+          "text": "用物",
+          "box": {
+            "x": 0.429,
+            "y": 0.4965,
+            "width": 0.054,
+            "height": 0.011
+          }
+        },
+        {
+          "text": "100",
+          "box": {
+            "x": 0.175,
+            "y": 0.464,
+            "width": 0.092,
+            "height": 0.012
+          }
+        },
+        {
+          "text": "【消費税込み",
+          "box": {
+            "x": 0.142,
+            "y": 0.441,
+            "width": 0.171,
+            "height": 0.022
+          }
+        },
+        {
+          "text": "A Ma",
+          "box": {
+            "x": 0.746,
+            "y": 0.4235,
+            "width": 0.087,
+            "height": 0.019
+          }
+        },
+        {
+          "text": "779番",
+          "box": {
+            "x": 0.641,
+            "y": 0.4025,
+            "width": 0.192,
+            "height": 0.021
+          }
+        },
+        {
+          "text": "チケットであ Palio",
+          "box": {
+            "x": 0.099,
+            "y": 0.383,
+            "width": 0.347,
+            "height": 0.022
+          }
+        }
+      ]
+    },
+    {
+      "name": "チケットぴあ 立見（実物・FLOGGING MOLLY 2005）：横0.4倍",
+      "source": "TicketReaderTests.squeezed040",
+      "imageSize": {
+        "width": 4032,
+        "height": 3024
+      },
+      "lines": [
+        {
+          "text": "FLOGGING MOLLYS",
+          "box": {
+            "x": 0.172,
+            "y": 0.6705,
+            "width": 0.784,
+            "height": 0.041
+          }
+        },
+        {
+          "text": "JAPAN TOUR 20057",
+          "box": {
+            "x": 0.306,
+            "y": 0.6605,
+            "width": 0.422,
+            "height": 0.021
+          }
+        },
+        {
+          "text": "JBuFlion Records",
+          "box": {
+            "x": 0.154,
+            "y": 0.641,
+            "width": 0.513,
+            "height": 0.024
+          }
+        },
+        {
+          "text": "お問合せ◆SMASH 00-0000-0000",
+          "box": {
+            "x": 0.111,
+            "y": 0.6235,
+            "width": 0.648,
+            "height": 0.025
+          }
+        },
+        {
+          "text": "※入場時にドリンク代¥500お支払い頂きます。",
+          "box": {
+            "x": 0.13,
+            "y": 0.5675,
+            "width": 0.639,
+            "height": 0.025
+          }
+        },
+        {
+          "text": "LIQUIDROOM",
+          "box": {
+            "x": 0.116,
+            "y": 0.533,
+            "width": 0.531,
+            "height": 0.022
+          }
+        },
+        {
+          "text": "2005",
+          "box": {
+            "x": 0.126,
+            "y": 0.5175,
+            "width": 0.209,
+            "height": 0.019
+          }
+        },
+        {
+          "text": "929木",
+          "box": {
+            "x": 0.412,
+            "y": 0.516,
+            "width": 0.243,
+            "height": 0.016
+          }
+        },
+        {
+          "text": "6:00PM 開場",
+          "box": {
+            "x": 0.233,
+            "y": 0.496,
+            "width": 0.257,
+            "height": 0.022
+          }
+        },
+        {
+          "text": "7:00PM 開演",
+          "box": {
+            "x": 0.612,
+            "y": 0.4955,
+            "width": 0.262,
+            "height": 0.021
+          }
+        },
+        {
+          "text": "立見",
+          "box": {
+            "x": 0.117,
+            "y": 0.477,
+            "width": 0.097,
+            "height": 0.02
+          }
+        },
+        {
+          "text": "14,700",
+          "box": {
+            "x": 0.116,
+            "y": 0.463,
+            "width": 0.157,
+            "height": 0.018
+          }
+        },
+        {
+          "text": "【消費税込み】",
+          "box": {
+            "x": 0.141,
+            "y": 0.4395,
+            "width": 0.194,
+            "height": 0.023
+          }
+        },
+        {
+          "text": "A la",
+          "box": {
+            "x": 0.743,
+            "y": 0.423,
+            "width": 0.092,
+            "height": 0.018
+          }
+        },
+        {
+          "text": "779番",
+          "box": {
+            "x": 0.641,
+            "y": 0.4025,
+            "width": 0.194,
+            "height": 0.021
+          }
+        },
+        {
+          "text": "チケットであ PalL0：",
+          "box": {
+            "x": 0.101,
+            "y": 0.3835,
+            "width": 0.38,
+            "height": 0.021
+          }
+        }
+      ]
+    },
+    {
+      "name": "チケットぴあ 立見：複数の読み取り結果をまとめた期待値",
+      "source": "TicketReaderTests.combinesPassesToFillEveryField",
+      "expected": {
+        "title": "FLOGGING MOLLY",
+        "subtitleStartsWith": "JAPAN TOUR 2005",
+        "venue": "LIQUIDROOM",
+        "price": 4700
+      },
+      "note": "上の4つの読み取り結果を項目ごとの多数決でまとめ、公演名は単語ごとに『読み取られた綴りすべてとの編集距離の合計が最小の綴り』を採用（MOLL/SMOLLY/MOLLYS→MOLLY）"
+    }
+  ]
+}

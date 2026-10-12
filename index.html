@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>チケット半券コレクション</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="半券">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="theme-color" content="#b02030">
+  <script type="importmap">
+    {
+      "imports": {
+        "preact": "./vendor/preact.module.js",
+        "preact/hooks": "./vendor/hooks.module.js",
+        "htm": "./vendor/htm.module.js"
+      }
+    }
+  </script>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #fcf6ec;
+      --surface: #ffffff;
+      --text: #1f1a17;
+      --muted: #6f6660;
+      --accent: #b02030;
+      --border: #e4dcd2;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #161312;
+        --surface: #221e1c;
+        --text: #f2ece6;
+        --muted: #a49a92;
+        --accent: #ff6b78;
+        --border: #3a3330;
+      }
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; background: var(--bg); color: var(--text); }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Noto Sans JP", sans-serif;
+      font-size: 17px;
+      line-height: 1.5;
+      -webkit-text-size-adjust: 100%;
+      padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+    }
+    main { max-width: 720px; margin: 0 auto; padding: 16px; }
+    h1 { font-size: 22px; margin: 8px 0 16px; }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin-bottom: 12px; }
+    .muted { color: var(--muted); font-size: 14px; }
+    a { color: var(--accent); }
+    .banner {
+      position: fixed; left: 12px; right: 12px; bottom: calc(12px + env(safe-area-inset-bottom));
+      display: flex; gap: 12px; align-items: center; justify-content: space-between;
+      background: var(--text); color: var(--bg); border-radius: 12px; padding: 12px 16px;
+    }
+    .banner button { font: inherit; border: 0; border-radius: 8px; padding: 6px 12px; background: var(--accent); color: #fff; }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+  <script type="module" src="src/app.js"></script>
+</body>
+</html>
