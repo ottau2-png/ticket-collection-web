@@ -32,6 +32,9 @@
   <h1>実機確認（Phase 0）</h1>
   <p>ホーム画面に追加したアプリから開いて、上から順に試してください。最後に「結果をコピー」で結果を貼り付けてもらえれば読みます。</p>
   <p><a href="../">← アプリに戻る</a></p>
+  <p id="standalone-warning" class="ng status" hidden>
+    Safari で開いています。ホーム画面のアイコンから開き直してください（追加するときに「Webアプリとして開く」をオンに）。
+  </p>
 
   <section id="env">
     <h2>1. 環境</h2>
@@ -89,10 +92,11 @@
   <section id="summary">
     <h2>結果</h2>
     <button id="copy-results">結果をコピー</button>
+    <button id="clear-results">結果を消す</button>
     <span id="copy-status"></span>
     <pre id="summary-out"></pre>
   </section>
 
-  <script type="module" src="check.js"></script>
+  <script type="module" src="check.js?v=2"></script>
 </body>
 </html>

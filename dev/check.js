@@ -5,7 +5,11 @@ import { openDatabase, requestResult, transactionDone } from '../src/store/idb.j
 import { serviceWorkerVersion } from '../src/sw-register.js';
 
 const $ = (id) => document.getElementById(id);
-const results = {};
+// 結果は再起動（3 の確認）をまたいで残す
+const RESULTS_KEY = 'ticket-web-check-results';
+const results = (() => {
+  try { return JSON.parse(localStorage.getItem(RESULTS_KEY)) ?? {}; } catch { return {}; }
+})();
 
 function setResult(key, ok, detail) {
   results[key] = { ok, detail };
@@ -14,6 +18,7 @@ function setResult(key, ok, detail) {
     el.textContent = `${ok ? '成功' : '失敗'}：${detail}`;
     el.className = `status ${ok ? 'ok' : 'ng'}`;
   }
+  try { localStorage.setItem(RESULTS_KEY, JSON.stringify(results)); } catch {}
   renderSummary();
 }
 
@@ -58,6 +63,7 @@ async function showEnv() {
   const est = await navigator.storage?.estimate?.().catch(() => null);
   const persisted = await navigator.storage?.persisted?.().catch(() => null);
   const swVersion = await serviceWorkerVersion().catch(() => null);
+  $('standalone-warning').hidden = standalone;
   $('env-out').textContent = [
     `ホーム画面から起動：${standalone ? 'はい' : 'いいえ'}`,
     `UA：${navigator.userAgent}`,
@@ -237,6 +243,12 @@ $('copy-results').onclick = async () => {
   } catch (e) {
     $('copy-status').textContent = `コピーできません（${errorText(e)}）。下の文字を長押しで選んでください`;
   }
+};
+
+$('clear-results').onclick = () => {
+  for (const k of Object.keys(results)) delete results[k];
+  try { localStorage.removeItem(RESULTS_KEY); } catch {}
+  renderSummary();
 };
 
 showEnv();
