@@ -71,7 +71,7 @@ docs/                    引き継ぎ資料・テストデータ
 Web で本当にできるかが怪しい所を、作り込む前に実機で確かめる。ここで駄目なものがあれば計画を見直す。
 
 - [x] `git init`、`.gitignore`
-- [ ] GitHub に PUBLIC リポジトリ作成、GitHub Pages を有効化
+- [x] GitHub に PUBLIC リポジトリ作成、GitHub Pages を有効化（https://ottau2-png.github.io/ticket-collection-web/ 、`.nojekyll` で加工なしに配信）
 - [ ] 最小の PWA（manifest・sw.js・アイコン）を Pages に出し、iPhone でホーム画面に追加して standalone で開く
 - [x] 最小の PWA と実機確認ページ（`dev/check.html`）を作り、PC のブラウザで動作確認
 - [ ] 実機で確かめる（`dev/check.html` で）
@@ -230,4 +230,5 @@ Web で本当にできるかが怪しい所を、作り込む前に実機で確�
   - 版を上げると「新しい版があります」が出て、押すと新しい版に切り替わり古いキャッシュが消える
   - サーバーを止めてもページが開く（オフライン）
 - テスト 6件合格。キャッシュ一覧のテストは、ファイルを足すと失敗することを確認
+- GitHub Pages で公開し、PC のブラウザで表示・Service Worker 登録を確認
 - 未確認（実機待ち）：ホーム画面からの起動、persist、撮影・向き、共有メニュー、書き出し、再起動後の保存
