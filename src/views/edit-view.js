@@ -4,12 +4,14 @@ import { html } from '../html.js';
 import { useData } from '../data.js';
 import { CATEGORIES } from '../model/category.js';
 import {
-  emptyDraft, draftFromTicket, canSave, ticketFromDraft, withImage, withRecrop, withoutImage, SEAT_FIELDS, SEAT_LABELS,
+  emptyDraft, draftFromTicket, canSave, ticketFromDraft, withImage, withRecrop, withoutImage, overwriteFields,
+  SEAT_FIELDS, SEAT_LABELS,
 } from '../model/ticket.js';
 import { resolvePerformers } from '../model/performers.js';
 import { fullQuad } from '../model/crop.js';
 import { prepareSource, cropTicketImage, detectQuad } from '../image.js';
 import { CropView } from './crop-view.js';
+import { AIReadSheet } from './ai-read-sheet.js';
 import { goBack } from '../router.js';
 import { TextField, SelectField, DateField, OptionalTimeField, FieldGroup } from './fields.js';
 import { Thumbnail } from './thumbnail.js';
@@ -36,6 +38,8 @@ export function EditView({ ticketId }) {
   const [error, setError] = useState(null);
   // 切り抜き画面：{ source, initialQuad, autoQuad, recrop }
   const [cropping, setCropping] = useState(null);
+  const [showAI, setShowAI] = useState(false);
+  const [notice, setNotice] = useState(null);
 
   if (loaded && ticketId && !existing && !draft) {
     return html`<${Missing} />`;
@@ -107,6 +111,20 @@ export function EditView({ ticketId }) {
     }
   };
 
+  // AI の答えを反映：入力済みの欄も上書きする（答えが空の項目は触らない）
+  const applyAI = (parsed) => {
+    const { draft: next, filled } = overwriteFields(draft, parsed);
+    setDraft(next);
+    setNotice(filled.length ? `${filled.join('・')}を入力しました` : '入力できる項目がありませんでした');
+    setShowAI(false);
+  };
+
+  // 共有する画像：切り抜いた画像（保存前ならその場で作ったもの）
+  const imageForAI = async () => {
+    if (draft.imageChanged) return draft.image?.original ?? null;
+    return existing?.hasImage ? (await store.getOriginal(existing.id)) ?? null : null;
+  };
+
   const applyCrop = async (quad) => {
     setImageBusy(true);
     try {
@@ -133,9 +151,11 @@ export function EditView({ ticketId }) {
       </header>
       <main class="content form">
         ${error && html`<p class="error">${error}</p>`}
+        ${notice && html`<p class="notice" role="status" onClick=${() => setNotice(null)}>✓ ${notice}</p>`}
 
         <${ImageSection} draft=${draft} existing=${existing} busy=${imageBusy} onPick=${pickImage}
           onRecrop=${recrop} onRemove=${() => setDraft((d) => withoutImage(d))} />
+        <button type="button" class="button wide ai-button" onClick=${() => setShowAI(true)} disabled=${imageBusy}>🤖 AIで読み取る</button>
 
         <${FieldGroup}>
           <${TextField} label="公演名" value=${draft.title} onChange=${set('title')} placeholder="必須" wrap />
@@ -169,6 +189,9 @@ export function EditView({ ticketId }) {
           <${TextField} label="" value=${draft.comment} onChange=${set('comment')} multiline />
         <//>
       </main>
+      ${showAI && html`
+        <${AIReadSheet} hasImage=${draft.hasImage} getImage=${imageForAI} onApply=${applyAI} onClose=${() => setShowAI(false)} />
+      `}
       ${cropping && html`
         <${CropView}
           source=${cropping.source}

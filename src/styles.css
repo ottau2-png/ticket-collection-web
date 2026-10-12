@@ -267,3 +267,30 @@ details.card[open] summary { margin-bottom: 8px; }
 .crop-footer { display: flex; gap: 8px; justify-content: center; padding: 8px 16px 12px; }
 .crop-footer .button { background: #2a2a2a; color: #fff; border-color: #444; }
 .crop-hint { text-align: center; font-size: 14px; color: #ccc; margin: 0 16px 12px; }
+
+/* ---- AI で読み取る ---- */
+.ai-button { margin-top: -4px; }
+.notice { background: var(--surface); border: 1px solid #34c759; color: var(--text); border-radius: 10px; padding: 10px 12px; }
+.sheet-backdrop { position: fixed; inset: 0; z-index: 90; background: rgba(0, 0, 0, 0.4); display: flex; align-items: flex-end; justify-content: center; }
+.sheet {
+  width: 100%; max-width: 720px; max-height: calc(100% - 24px - env(safe-area-inset-top));
+  background: var(--bg); border-radius: 14px 14px 0 0; display: flex; flex-direction: column;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.sheet-bar { display: flex; align-items: center; padding: 10px 16px; border-bottom: 1px solid var(--border); }
+.sheet-bar h1 { flex: 1; text-align: center; font-size: 17px; margin: 0; }
+.sheet-body { overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 8px 16px 24px; }
+.steps { padding-left: 1.4em; margin: 8px 0; }
+.steps li { margin-bottom: 18px; }
+.steps li p { margin: 0 0 8px; }
+.step-done { margin-left: 10px; color: #2e7d32; font-size: 15px; }
+.link-button { display: block; border: 0; background: none; color: var(--accent); padding: 8px 0 0; font-size: 15px; }
+.prompt-text { white-space: pre-wrap; font-size: 13px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 10px; user-select: text; -webkit-user-select: text; }
+.answer-input {
+  width: 100%; font: inherit; font-size: 16px; padding: 10px; border-radius: 10px;
+  border: 1px solid var(--border); background: var(--surface); color: var(--text); resize: vertical;
+}
+.ai-result { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 12px 14px; }
+.ai-result h2 { font-size: 16px; margin: 0 0 8px; }
+.ai-result .facts dd { overflow-wrap: anywhere; }
+.error-text { color: var(--danger); }
