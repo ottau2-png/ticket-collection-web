@@ -9,6 +9,7 @@ import { SettingsView } from './views/settings-view.js';
 import { EditView } from './views/edit-view.js';
 import { DetailView } from './views/detail-view.js';
 import { ViewerView } from './views/viewer-view.js';
+import { PerformerListView, PerformerEditView } from './views/performers-view.js';
 import { releaseThumbnails } from './views/thumbnail.js';
 
 function App() {
@@ -58,6 +59,8 @@ function App() {
       ${route.name === 'edit' && html`<${EditView} key=${`edit-${route.params[0]}`} ticketId=${route.params[0]} />`}
       ${route.name === 'ticket' && html`<${DetailView} key=${route.params[0]} ticketId=${route.params[0]} />`}
       ${route.name === 'view' && html`<${ViewerView} ticketId=${route.params[0]} />`}
+      ${route.name === 'performers' && html`<${PerformerListView} />`}
+      ${route.name === 'performer' && html`<${PerformerEditView} key=${route.params[0]} performerId=${route.params[0]} />`}
       ${!KNOWN_ROUTES.includes(route.name) && html`<${Placeholder} route=${route} />`}
       ${updateReady && html`
         <div class="banner" role="status">
@@ -69,11 +72,11 @@ function App() {
   `;
 }
 
-const KNOWN_ROUTES = ['list', 'settings', 'new', 'edit', 'ticket', 'view'];
+const KNOWN_ROUTES = ['list', 'settings', 'new', 'edit', 'ticket', 'view', 'performers', 'performer'];
 
 /** まだ作っていない画面 */
 function Placeholder({ route }) {
-  const names = { performers: '出演者' };
+  const names = {};
   return html`
     <div class="screen">
       <header class="nav-bar">

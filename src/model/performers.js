@@ -83,3 +83,22 @@ export function parseAliases(text, name) {
   const nameKey = normalizeKey(name);
   return splitNames(text).filter((a) => normalizeKey(a) !== nameKey);
 }
+
+/** 出演者ごとの半券の枚数 */
+export function ticketCounts(tickets) {
+  const counts = new Map();
+  for (const t of tickets) for (const id of t.performerIds) counts.set(id, (counts.get(id) ?? 0) + 1);
+  return counts;
+}
+
+/**
+ * 編集した名前・別名が、ほかの出演者の名前・別名と重なっていないか。重なっていればその出演者を返す。
+ * 重なったまま保存すると、出演者欄の名前がどちらに紐づくか分からなくなる（統合を勧める）
+ */
+export function conflictingPerformer(performers, id, name, aliases) {
+  for (const n of [name, ...aliases]) {
+    const other = findPerformer(performers.filter((p) => p.id !== id), n);
+    if (other) return other;
+  }
+  return null;
+}

@@ -2,6 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import {
   findPerformer, resolvePerformers, mergePerformer, orphanPerformerIds, performerNamesOf, parseAliases, comparePerformers,
+  ticketCounts, conflictingPerformer,
 } from '../../src/model/performers.js';
 
 const performer = (id, name, { reading = '', aliases = [] } = {}) => ({ id, name, reading, aliases });
@@ -65,4 +66,19 @@ test('別名欄から名前と同じものを除く', () => {
 test('出演者はよみがあればよみ、なければ名前で並べる', () => {
   const list = [performer('1', 'Zeta'), performer('2', '漢字バンド', { reading: 'かんじばんど' }), performer('3', 'alpha')];
   assert.deepEqual(list.sort(comparePerformers).map((p) => p.name), ['alpha', 'Zeta', '漢字バンド']);
+});
+
+test('出演者ごとの半券の枚数', () => {
+  const counts = ticketCounts([ticket('1', ['a', 'b']), ticket('2', ['a'])]);
+  assert.equal(counts.get('a'), 2);
+  assert.equal(counts.get('b'), 1);
+  assert.equal(counts.get('c'), undefined);
+});
+
+test('名前・別名がほかの出演者と重なるのを見つける（自分自身は除く）', () => {
+  const performers = [performer('a', 'Mr.Children', { aliases: ['ミスチル'] }), performer('b', 'サンプル')];
+  assert.equal(conflictingPerformer(performers, 'b', 'ｍｒ．ｃｈｉｌｄｒｅｎ', []).id, 'a');
+  assert.equal(conflictingPerformer(performers, 'b', 'サンプル', ['ミスチル']).id, 'a');
+  assert.equal(conflictingPerformer(performers, 'a', 'Mr.Children', ['ミスチル']), null);
+  assert.equal(conflictingPerformer(performers, 'b', '新しい名前', []), null);
 });

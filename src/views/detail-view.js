@@ -2,10 +2,10 @@
 import { useEffect, useState } from 'preact/hooks';
 import { html } from '../html.js';
 import { useData } from '../data.js';
-import { performerNamesOf } from '../model/performers.js';
+import { compareText } from '../model/text.js';
 import { SEAT_FIELDS, SEAT_LABELS } from '../model/ticket.js';
 import { formatDate, formatPrice, categoryIcon } from '../format.js';
-import { goBack, navigate } from '../router.js';
+import { goBack, navigate, href } from '../router.js';
 import { Missing, useObjectUrl } from './common.js';
 import { ZoomableImage } from './zoomable-image.js';
 
@@ -38,7 +38,7 @@ export function DetailView({ ticketId }) {
     goBack();
   };
 
-  const performers = performerNamesOf(ticket, performersById);
+  const performers = ticket.performerIds.map((id) => performersById.get(id)).filter(Boolean).sort((a, b) => compareText(a.name, b.name));
   const seats = SEAT_FIELDS.filter((k) => ticket.seat?.[k]).map((k) => ({ label: SEAT_LABELS[k], value: ticket.seat[k] }));
   const times = [ticket.openTime && `開場 ${ticket.openTime}`, ticket.startTime && `開演 ${ticket.startTime}`].filter(Boolean).join('　');
 
@@ -60,7 +60,7 @@ export function DetailView({ ticketId }) {
         ${ticket.subtitle && html`<p class="detail-subtitle">${ticket.subtitle}</p>`}
 
         <dl class="detail-facts card">
-          ${performers.length > 0 && html`<dt>出演者</dt><dd>${performers.join('、')}</dd>`}
+          ${performers.length > 0 && html`<dt>出演者</dt><dd>${performers.map((p, i) => html`${i > 0 ? '、' : ''}<a href=${href('performer', p.id)}>${p.name}</a>`)}</dd>`}
           ${ticket.category && html`<dt>カテゴリー</dt><dd>${ticket.category}</dd>`}
           <dt>公演日</dt><dd>${formatDate(ticket.performanceDate)}</dd>
           ${times && html`<dt>時刻</dt><dd>${times}</dd>`}
