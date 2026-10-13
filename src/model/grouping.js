@@ -10,6 +10,7 @@ export const LIST_MODES = [
   { id: 'byYear', label: '年ごと' },
   { id: 'byPerformer', label: '出演者ごと' },
   { id: 'byCategory', label: 'カテゴリーごと' },
+  { id: 'byVenue', label: '会場ごと' },
 ];
 
 /** 公演日の新しい順。同じ日は開演の遅い順、それも同じなら登録の新しい順 */
@@ -36,6 +37,8 @@ export function groupTickets(tickets, mode, performersById) {
       return performerSections(sorted, performersById);
     case 'byCategory':
       return categorySections(sorted);
+    case 'byVenue':
+      return venueSections(sorted);
     default:
       return [{ id: 'all', title: null, tickets: sorted }];
   }
@@ -86,6 +89,34 @@ function categorySections(tickets) {
       const items = byCategory.get(c);
       return { id: `category-${name}`, title: `${name}（${items.length}）`, tickets: items };
     });
+}
+
+/**
+ * 会場の名前順。全角半角・大文字小文字・前後の空白だけ違う会場は1つにまとめ、見出しはいちばん多い書き方。
+ * 会場なしは最後
+ */
+function venueSections(tickets) {
+  const byVenue = new Map();
+  const without = [];
+  for (const t of tickets) {
+    const key = normalizeKey(t.venue);
+    if (!key) {
+      without.push(t);
+      continue;
+    }
+    if (!byVenue.has(key)) byVenue.set(key, { items: [], spellings: new Map() });
+    const group = byVenue.get(key);
+    group.items.push(t);
+    const spelling = t.venue.trim();
+    group.spellings.set(spelling, (group.spellings.get(spelling) ?? 0) + 1);
+  }
+  const sections = [...byVenue].map(([key, { items, spellings }]) => {
+    const name = [...spellings].sort((a, b) => b[1] - a[1])[0][0];
+    return { id: `venue-${key}`, name, title: `${name}（${items.length}）`, tickets: items };
+  });
+  sections.sort((a, b) => compareText(a.name, b.name));
+  if (without.length) sections.push({ id: 'no-venue', title: `会場なし（${without.length}）`, tickets: without });
+  return sections.map(({ name: _name, ...s }) => s);
 }
 
 /** 全画面でめくって見る半券。並び順のまま、画像のあるものだけを1回ずつ */

@@ -92,3 +92,18 @@ test('めくる画面：並び順のまま、画像のある半券だけを1回�
   const sections = groupTickets([shared, solo, noImage], 'byPerformer', byId(band, guest));
   assert.deepEqual(viewableTickets(sections).map((t) => t.title), ['対バン', 'ワンマン']);
 });
+
+test('会場ごと：会場名の順、見出しに件数、全角半角・大文字小文字だけ違う会場は1つに、会場なしは最後', () => {
+  const tickets = [
+    ticket('A', '2026-01-01', { venue: '日本武道館' }),
+    ticket('B', '2025-01-01', { venue: 'Zepp Haneda' }),
+    ticket('C', '2024-01-01', { venue: 'ＺＥＰＰ　Ｈａｎｅｄａ' }),
+    ticket('D', '2023-01-01', { venue: '  日本武道館 ' }),
+    ticket('E', '2022-01-01', { venue: 'Zepp Haneda' }),
+    ticket('F', '2021-01-01'),
+  ];
+  const sections = groupTickets(tickets, 'byVenue', new Map());
+  // 表記が分かれたときは、いちばん多い書き方を見出しにする
+  assert.deepEqual(sections.map((s) => s.title), ['Zepp Haneda（3）', '日本武道館（2）', '会場なし（1）']);
+  assert.deepEqual(titles(sections[0]), ['B', 'C', 'E']);
+});
