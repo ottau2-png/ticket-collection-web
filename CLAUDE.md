@@ -8,7 +8,8 @@ iOS ネイティブ版（`../ticket-collection/`）の Web 版として作り直
 - 構成：ビルドなし・複数ファイル（ES モジュール＋Preact/htm 同梱）、GitHub Pages（`main` から公開）＋ PUBLIC リポジトリ
 - Phase 0〜8 完了（公開中の版は `sw.js` の `VERSION`）。iOS 版からの移行も実機で済んだ（126件）。実機での「完了の確認」も全項目 OK
 - 実機確認済み：出演者の管理（一部確認でユーザーが完了と判断）、persist は「有効」
-- 残り：ChatGPT の答えで固まる件（保留）、Phase 9（OCR を入れるかの判断）
+- 計画の作業はすべて終わった。ChatGPT の答えで固まる件は対応しない（Claude を使う）、OCR（Phase 9）は入れない（いずれもユーザー判断・2026-10-18）
+- 今後は使いながら出た不具合・要望に対応する
 - テストは `npm ci` で `fake-indexeddb` を入れてから `npm test`
 
 ## 守ること
