@@ -10,6 +10,7 @@
   --border: #e2d9ce;
   --danger: #d32f2f;
   --header-bg: rgba(246, 241, 234, 0.92);
+  --switch-off: #d8cfc4;
 }
 @media (prefers-color-scheme: dark) {
   :root {
@@ -23,6 +24,7 @@
     --border: #3a3330;
     --danger: #ff5a52;
     --header-bg: rgba(21, 18, 17, 0.92);
+    --switch-off: #4a423e;
   }
 }
 
@@ -38,6 +40,7 @@ body {
   padding-right: env(safe-area-inset-right);
 }
 a { color: var(--accent); }
+input[type=checkbox] { accent-color: var(--accent); }
 button { font: inherit; color: inherit; }
 .hidden { display: none; }
 
@@ -182,7 +185,7 @@ input[type="date"].field-input, input[type="time"].field-input { min-height: 34p
 }
 .switch { position: relative; flex-shrink: 0; width: 51px; height: 31px; }
 .switch input { position: absolute; opacity: 0; width: 100%; height: 100%; margin: 0; z-index: 1; }
-.switch-track { position: absolute; inset: 0; border-radius: 16px; background: var(--surface-2); transition: background 0.2s; }
+.switch-track { position: absolute; inset: 0; border-radius: 16px; background: var(--switch-off); transition: background 0.2s; }
 .switch-track::after {
   content: ""; position: absolute; top: 2px; left: 2px; width: 27px; height: 27px; border-radius: 50%;
   background: #fff; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3); transition: transform 0.2s;
@@ -350,3 +353,14 @@ details.card[open] summary { margin-bottom: 8px; }
   display: block; margin: 10px 16px 0; padding: 10px 12px; border-radius: 10px; font-size: 14px;
   background: var(--surface); border: 1px solid var(--border); color: var(--text); text-decoration: none;
 }
+
+/* ---- 使い方の案内 ---- */
+.guide-card {
+  margin: 10px 16px 0; padding: 10px 12px; border-radius: 10px; font-size: 14px;
+  background: var(--surface); border: 1px solid var(--accent);
+}
+.guide-card summary { cursor: pointer; font-weight: 600; }
+.guide-card p, .guide-card ol { margin: 8px 0 0; }
+.guide-card ol { padding-left: 1.4em; }
+.getting-started .guide-steps { text-align: left; max-width: 440px; margin: 24px auto 0; padding-left: 1.4em; color: var(--text); font-size: 15px; }
+.getting-started .guide-steps li { margin-bottom: 10px; }

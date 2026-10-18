@@ -10,6 +10,8 @@ import { ticketMetaLine, formatDate } from '../format.js';
 import { loadPref, savePref } from '../prefs.js';
 import { href, navigate } from '../router.js';
 import { Thumbnail } from './thumbnail.js';
+import { InstallHint, GettingStarted } from './guide.js';
+import { isStandalone } from '../platform.js';
 import { useSwipeToReveal, useLongPress } from './gestures.js';
 
 function usePref(key, fallback, valid) {
@@ -46,6 +48,7 @@ export function ListView() {
   };
 
   const empty = loaded && tickets.length === 0;
+  const standalone = useMemo(() => isStandalone(), []);
   const noMatch = !empty && filtered.length === 0;
 
   return html`
@@ -81,17 +84,13 @@ export function ListView() {
       </header>
 
       <main class="list-body">
+        ${!standalone && html`<${InstallHint} />`}
         ${loaded && backupIsStale(lastExportAt, tickets.length) && html`
           <a class="backup-reminder" href=${href('settings')}>
             💾 ${lastExportAt ? '最後のバックアップから30日以上経っています' : 'まだバックアップを書き出していません'}。設定から書き出せます ›
           </a>
         `}
-        ${empty && html`
-          <div class="empty">
-            <p>まだ半券がありません。</p>
-            <p><a class="button primary" href=${href('new')}>半券を追加</a></p>
-          </div>
-        `}
+        ${empty && html`<${GettingStarted} />`}
         ${noMatch && html`<div class="empty"><p>「${query}」に一致する半券はありません。</p></div>`}
         ${sections.map((section) => html`
           <section class="ticket-section" key=${section.id}>
