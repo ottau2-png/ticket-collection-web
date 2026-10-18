@@ -40,7 +40,6 @@ export function SettingsView() {
           `}
         </section>
         <${BackupSection} />
-        <p class="note"><a href="dev/check.html">実機確認ページ</a></p>
       </main>
     </div>
   `;
